@@ -24,23 +24,27 @@ func main() {
 	for scanner.Scan() {
 		chars := strings.Split(scanner.Text(), "")
 		charLength := len(chars)
-		var foundLeft, foundRight int = -1, -1
+		var foundLeft, foundRight int8 = -1, -1
 		for i := 0; i < charLength; i++ {
 			if foundLeft == -1 {
-				leftNum, err := strconv.ParseInt(chars[i], 10, 32)
+				leftNum, err := strconv.ParseInt(chars[i], 10, 8)
 				if err == nil {
-					foundLeft = int(leftNum)
+					foundLeft = int8(leftNum)
 				}
 			}
 			if foundRight == -1 {
-				rightNum, err := strconv.ParseInt(chars[charLength-1-i], 10, 32)
+				rightNum, err := strconv.ParseInt(chars[charLength-1-i], 10, 8)
 				if err == nil {
-					foundRight = int(rightNum)
+					foundRight = int8(rightNum)
 				}
+			}
+
+			if foundLeft != -1 && foundRight != -1 {
+				break
 			}
 		}
 
-		result += (foundLeft * 10) + foundRight
+		result += int(foundLeft*10) + int(foundRight)
 	}
 
 	fmt.Println(result)
