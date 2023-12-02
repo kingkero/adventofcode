@@ -25,7 +25,7 @@ func getColorMention(reveal string, color string) float64 {
 	return result
 }
 
-func part01() int {
+func solve() (int, int) {
 	file, err := os.Open("./input.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +35,8 @@ func part01() int {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 
-	var result int64 = 0
+	var resultPart01 int64 = 0
+	var resultPart02 float64 = 0.0
 
 	for scanner.Scan() {
 		split := strings.Split(scanner.Text(), ": ")
@@ -49,43 +50,16 @@ func part01() int {
 		}
 
 		if foundRed <= 12 && foundBlue <= 14 && foundGreen <= 13 {
-			result += id
+			resultPart01 += id
 		}
+		resultPart02 += foundRed * foundBlue * foundGreen
 
 	}
-	return int(result)
-}
-
-func part02() int {
-	file, err := os.Open("./input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var result int64 = 0
-
-	for scanner.Scan() {
-		split := strings.Split(scanner.Text(), ": ")
-		foundRed, foundBlue, foundGreen := 0.0, 0.0, 0.0
-
-		// id, _ := strconv.ParseInt(regexp.MustCompile("([0-9]+)$").FindString(split[0]), 10, 16)
-		for _, reveal := range strings.Split(split[1], "; ") {
-			foundRed = math.Max(foundRed, getColorMention(reveal, "red"))
-			foundBlue = math.Max(foundBlue, getColorMention(reveal, "blue"))
-			foundGreen = math.Max(foundGreen, getColorMention(reveal, "green"))
-		}
-
-		result += (int64(foundRed) * int64(foundBlue) * int64(foundGreen))
-
-	}
-	return int(result)
+	return int(resultPart01), int(resultPart02)
 }
 
 func main() {
-	fmt.Println("Part 1: ", part01())
-	fmt.Println("Part 2: ", part02())
+	solution01, solution02 := solve()
+	fmt.Println("Part 1: ", solution01)
+	fmt.Println("Part 2: ", solution02)
 }
