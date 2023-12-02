@@ -10,7 +10,7 @@ import (
 )
 
 func part01() int {
-	file, err := os.Open("./inputs/day01.txt")
+	file, err := os.Open("./input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,7 +66,7 @@ func checkForNumber(stringVal string, intVal int, charLength int, chars []string
 }
 
 func part02() int {
-	file, err := os.Open("./inputs/day01.txt")
+	file, err := os.Open("./input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
