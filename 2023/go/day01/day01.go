@@ -1,16 +1,15 @@
-package main
+package day01
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 )
 
-func part01() int {
-	file, err := os.Open("./input.txt")
+func part01(input string) int {
+	file, err := os.Open(input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,8 +64,8 @@ func checkForNumber(stringVal string, intVal int, charLength int, chars []string
 	*numbers = append(*numbers, intVal)
 }
 
-func part02() int {
-	file, err := os.Open("./input.txt")
+func part02(input string) int {
+	file, err := os.Open(input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -115,7 +114,6 @@ func part02() int {
 	return result
 }
 
-func main() {
-	fmt.Println("Part 1: ", part01())
-	fmt.Println("Part 2: ", part02())
+func Solve(input string) (int, int) {
+	return part01(input), part02(input)
 }
