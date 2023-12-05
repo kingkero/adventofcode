@@ -1,8 +1,7 @@
-package main
+package day02
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -25,8 +24,8 @@ func getColorMention(reveal string, color string) float64 {
 	return result
 }
 
-func solve() (int, int) {
-	file, err := os.Open("./input.txt")
+func Solve(input string) (int, int) {
+	file, err := os.Open(input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,10 +55,4 @@ func solve() (int, int) {
 
 	}
 	return int(resultPart01), int(resultPart02)
-}
-
-func main() {
-	solution01, solution02 := solve()
-	fmt.Println("Part 1: ", solution01)
-	fmt.Println("Part 2: ", solution02)
 }
