@@ -81,12 +81,7 @@ func sum(values []int) int {
 	return result
 }
 
-func Solve(input string) (int, int) {
-	lines, err := readFile(input)
-	if err != nil {
-		log.Fatal("Could not open file "+input, err)
-	}
-
+func part01(lines []string) int {
 	result := 0
 
 	prevLine := ""
@@ -101,5 +96,32 @@ func Solve(input string) (int, int) {
 		prevLine = line
 	}
 
-	return result, 0
+	return result
+}
+
+func part02(lines []string) int {
+	result := 0
+
+	/*
+		prevLine := ""
+		for i, line := range lines {
+			nextLine := ""
+			if i+1 < len(lines) {
+				nextLine = lines[i+1]
+			}
+
+			prevLine = line
+		}
+	*/
+
+	return result
+}
+
+func Solve(input string) (int, int) {
+	lines, err := readFile(input)
+	if err != nil {
+		log.Fatal("Could not open file "+input, err)
+	}
+
+	return part01(lines), part02(lines)
 }
