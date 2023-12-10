@@ -1,7 +1,6 @@
 package day03
 
 import (
-	"fmt"
 	"log"
 	"regexp"
 	"strconv"
@@ -85,7 +84,7 @@ func part02(lines []string) int {
 	asteriskRegex := regexp.MustCompile("\\*")
 
 	// prevLine := ""
-	for lineNumber, line := range lines {
+	for _, line := range lines {
 		/*
 			nextLine := ""
 			if i+1 < len(lines) {
@@ -102,7 +101,7 @@ func part02(lines []string) int {
 		partsIndex := 1
 
 		for gear := 0; gear < len(parts)-1; gear++ {
-			fmt.Printf("gear at line %d col %d\n", lineNumber+1, leftDistance+1)
+			// fmt.Printf("gear at line %d col %d\n", lineNumber+1, leftDistance+1)
 
 			leftDistance += len(parts[partsIndex])
 			partsIndex++
