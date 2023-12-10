@@ -1,32 +1,13 @@
 package day03
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/kingkero/adventofcode/2023/go/util"
 )
-
-// Read a complete file line by line into memory.
-func readFile(input string) ([]string, error) {
-	file, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	return lines, scanner.Err()
-}
 
 // Check a single line against its previous and next line if it contains candidate numbers.
 func checkLine(prevLine, currentLine, nextLine string) []int {
@@ -74,14 +55,6 @@ func checkLine(prevLine, currentLine, nextLine string) []int {
 	return result
 }
 
-func sum(values []int) int {
-	result := 0
-	for _, val := range values {
-		result += val
-	}
-	return result
-}
-
 func part01(lines []string) int {
 	result := 0
 
@@ -92,7 +65,7 @@ func part01(lines []string) int {
 			nextLine = lines[i+1]
 		}
 		importantLineNumbers := checkLine(prevLine, line, nextLine)
-		result += sum(importantLineNumbers)
+		result += util.SumInts(importantLineNumbers)
 
 		prevLine = line
 	}
@@ -142,7 +115,7 @@ func part02(lines []string) int {
 }
 
 func Solve(input string) (int, int) {
-	lines, err := readFile(input)
+	lines, err := util.ReadFile(input)
 	if err != nil {
 		log.Fatal("Could not open file "+input, err)
 	}
