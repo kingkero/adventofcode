@@ -2,6 +2,7 @@ package day03
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -100,19 +101,42 @@ func part01(lines []string) int {
 }
 
 func part02(lines []string) int {
+	// TODO:
+	// instead of splitting again and again each line and using checkForSymbol in part01
+	// parse the whole file once into a proper readable format
+	// so that it can be checked for:
+	// - given number at position (line + col), are there adjacent symbols?
+	// - given gear at position (line + col), get adjacent numbers
 	result := 0
 
-	/*
-		prevLine := ""
-		for i, line := range lines {
+	asteriskRegex := regexp.MustCompile("\\*")
+
+	// prevLine := ""
+	for lineNumber, line := range lines {
+		/*
 			nextLine := ""
 			if i+1 < len(lines) {
 				nextLine = lines[i+1]
 			}
+		*/
 
-			prevLine = line
+		parts := asteriskRegex.Split(line, -1)
+		if len(parts) < 2 {
+			continue
 		}
-	*/
+
+		leftDistance := len(parts[0])
+		partsIndex := 1
+
+		for gear := 0; gear < len(parts)-1; gear++ {
+			fmt.Printf("gear at line %d col %d\n", lineNumber+1, leftDistance+1)
+
+			leftDistance += len(parts[partsIndex])
+			partsIndex++
+		}
+
+		// prevLine = line
+	}
 
 	return result
 }
