@@ -1,3 +1,3 @@
 module github.com/kingkero/adventofcode/2023/go
 
-go 1.19
+go 1.21
