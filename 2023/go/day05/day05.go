@@ -25,10 +25,21 @@ func getMappedId(originalId int, data [][]int) int {
 	return result
 }
 
+func getMap(data [][]int) map[int]int {
+	result := make(map[int]int)
+
+	for _, rules := range data {
+		for i := 0; i < rules[2]; i++ {
+			result[rules[1]+i] = rules[0] + i
+		}
+	}
+
+	return result
+}
+
 func getMapData(start int, lines []string) ([][]int, int) {
 	var data [][]int
 	for i := start; i < len(lines); i++ {
-		// fmt.Println(lines[i])
 		if lines[i] == "" {
 			return data, i
 		}
@@ -47,9 +58,16 @@ func getLocationIds(seeds []int, lines []string) []int {
 
 	for {
 		data, lastLine = getMapData(lastLine+2, lines)
+		lookup := getMap(data)
+
 		tmp := make([]int, len(ids))
 		for i, id := range ids {
-			tmp[i] = getMappedId(id, data)
+			mapped, ok := lookup[id]
+			if ok {
+				tmp[i] = mapped
+			} else {
+				tmp[i] = id
+			}
 		}
 
 		ids = tmp
