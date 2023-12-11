@@ -2,10 +2,10 @@ package day05
 
 import (
 	"log"
+	"math"
 	"slices"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -79,21 +79,50 @@ func part01(lines []string) int {
 	return slices.Min(locationIds)
 }
 
+func getBatch(start, length int) []int {
+	result := make([]int, length)
+	for i := 0; i < length; i++ {
+		result[i] = start + i
+	}
+	return result
+}
+
 func part02(lines []string) int {
 	seedRanges := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
 
-	// var mins []int
+	min := math.MaxInt64
+
+	BATCH_SIZE := 100_000
 
 	for i := 0; i < len(seedRanges); i += 2 {
+		// try brute force with batched IDs
+		start := seedRanges[i]
+		batches := int(math.Floor(float64(seedRanges[i+1]) / float64(BATCH_SIZE)))
+
+		for batch := 0; batch < batches; batch++ {
+			seeds := getBatch(start+(batch*BATCH_SIZE), BATCH_SIZE)
+
+			found := slices.Min(getLocationIdsFromSeeds(seeds, lines))
+			if found < min {
+				min = found
+			}
+		}
+
+		found := slices.Min(getLocationIdsFromSeeds(
+			getBatch(start+(batches*BATCH_SIZE), seedRanges[i+1]%BATCH_SIZE),
+			lines,
+		))
+		if found < min {
+			min = found
+		}
+
 		// TODO:
 		// instead of comparing single seed values
 		// use the ranges (read: left and right boundary)
-		valueRange := []int{seedRanges[i], seedRanges[i+1]}
-		dump.P(valueRange)
+		// valueRange := []int{seedRanges[i], seedRanges[i+1]}
 	}
 
-	return 0
-	// return slices.Min(mins)
+	return min
 }
 
 func Solve(input string) (int, int) {
