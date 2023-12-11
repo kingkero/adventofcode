@@ -1,11 +1,12 @@
 package day04
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"regexp"
+	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
@@ -48,59 +49,30 @@ func part01(lines []string) int {
 	return result
 }
 
+func getScratchCardNumbers(line string) ([]string, []string) {
+	numbersRegexp := regexp.MustCompile("\\d+")
+	data := strings.Split(strings.Split(line, ":")[1], "|")
+	return numbersRegexp.FindAllString(data[0], -1), numbersRegexp.FindAllString(data[1], -1)
+}
+
 func part02(lines []string) int {
 	result := 0
 
-	whiteSpaceRegex := regexp.MustCompile("\\s+")
-	cardToWinners := make(map[int]int)
+	copies := make([]int, len(lines))
 
-	for _, line := range lines {
-		parts := whiteSpaceRegex.Split(line, -1)
+	for cardIndex, line := range lines {
+		copies[cardIndex]++
 
-		cardNumber, _ := strconv.ParseInt(parts[1][:len(parts[1])-1], 10, 64)
-		cardNumberInt := int(cardNumber)
-		var winners []int
-		amountOfWinners := 0
-
-		isWinner := true
-		for i := 2; i < len(parts); i++ {
-			if parts[i] == "|" {
-				isWinner = false
-				continue
-			}
-
-			number, _ := strconv.ParseInt(parts[i], 10, 64)
-			if isWinner {
-				winners = append(winners, int(number))
-				continue
-			}
-
-			if util.IntsContains(winners, int(number)) {
-				amountOfWinners++
+		winners, mine := getScratchCardNumbers(line)
+		wins := 0
+		for _, number := range mine {
+			if slices.Contains(winners, number) {
+				wins++
+				copies[cardIndex+wins] += copies[cardIndex]
 			}
 		}
 
-		cardToWinners[cardNumberInt] = amountOfWinners
-	}
-
-	copies := make(map[int]int)
-	for card := range cardToWinners {
-		copies[card] = 1
-	}
-
-	for card, winners := range cardToWinners {
-		for i := 0; i < copies[card]; i++ {
-			for j := 0; j < winners; j++ {
-				copies[card+j+1]++
-			}
-		}
-	}
-
-	fmt.Println(copies)
-
-	for a, b := range copies {
-		result += b
-		fmt.Printf("%d = %d\n", a, b)
+		result += copies[cardIndex]
 	}
 
 	return result
