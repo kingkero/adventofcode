@@ -2,12 +2,38 @@ package day06
 
 import (
 	"log"
+	"regexp"
+	"strings"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
+func getWinningCharges(time, distance int) []int {
+	var result []int
+
+	for hold := 1; hold < time; hold++ {
+		run := hold * (time - hold)
+		if run > distance {
+			result = append(result, hold)
+		}
+	}
+
+	return result
+}
+
 func part01(lines []string) int {
-	return 0
+	numbersRegexp := regexp.MustCompile("\\d+")
+
+	times := util.Map(numbersRegexp.FindAllString(strings.Split(lines[0], ": ")[1], -1), util.ParseInt)
+	distances := util.Map(numbersRegexp.FindAllString(strings.Split(lines[1], ": ")[1], -1), util.ParseInt)
+
+	result := 1
+
+	for i := range times {
+		result *= len(getWinningCharges(times[i], distances[i]))
+	}
+
+	return result
 }
 
 func part02(lines []string) int {
