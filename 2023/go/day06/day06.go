@@ -37,7 +37,11 @@ func part01(lines []string) int {
 }
 
 func part02(lines []string) int {
-	return 0
+	whitespaceRegexp := regexp.MustCompile("\\s+")
+	time := util.ParseInt(whitespaceRegexp.ReplaceAllString(strings.Split(lines[0], ": ")[1], ""))
+	distance := util.ParseInt(whitespaceRegexp.ReplaceAllString(strings.Split(lines[1], ": ")[1], ""))
+
+	return len(getWinningCharges(time, distance))
 }
 
 func Solve(input string) (int, int) {
