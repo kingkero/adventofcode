@@ -9,6 +9,7 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/day03"
 	"github.com/kingkero/adventofcode/2023/go/day04"
 	"github.com/kingkero/adventofcode/2023/go/day05"
+	"github.com/kingkero/adventofcode/2023/go/day06"
 )
 
 func main() {
@@ -31,4 +32,8 @@ func main() {
 	start = time.Now()
 	p01, p02 = day05.Solve("./day05/input.txt")
 	fmt.Printf("Day 5:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
+
+	start = time.Now()
+	p01, p02 = day06.Solve("./day06/input.txt")
+	fmt.Printf("Day 6:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
 }
