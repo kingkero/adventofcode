@@ -99,9 +99,9 @@ func part02(lines []string) int {
 	var mins []int
 
 	for i := 0; i < len(seedRanges); i += 2 {
-		var seeds []int
+		seeds := make([]int, seedRanges[i+1])
 		for j := 0; j < seedRanges[i+1]; j++ {
-			seeds = append(seeds, seedRanges[i]+j)
+			seeds[j] = seedRanges[i] + j
 		}
 
 		mins = append(mins, evaluateSingleRange(seeds, lines))
