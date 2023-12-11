@@ -2,9 +2,9 @@ package day05
 
 import (
 	"log"
+	"slices"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -25,23 +25,45 @@ func getMappedId(originalId int, data [][]int) int {
 	return result
 }
 
+func getMapData(start int, lines []string) ([][]int, int) {
+	var data [][]int
+	for i := start; i < len(lines); i++ {
+		// fmt.Println(lines[i])
+		if lines[i] == "" {
+			return data, i
+		}
+
+		data = append(data, util.Map(strings.Split(lines[i], " "), util.ParseInt))
+	}
+
+	return data, -1
+}
+
+func getLocationIds(lines []string) []int {
+	ids := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
+
+	var data [][]int
+	lastLine := 1
+
+	for {
+		data, lastLine = getMapData(lastLine+2, lines)
+		tmp := make([]int, len(ids))
+		for i, id := range ids {
+			tmp[i] = getMappedId(id, data)
+		}
+
+		ids = tmp
+
+		if lastLine == -1 {
+			return ids
+		}
+	}
+}
+
 func part01(lines []string) int {
-	result := 0
+	locationIds := getLocationIds(lines)
 
-	seeds := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
-
-	seedsToSoilData := make([][]int, 2)
-	seedsToSoilData[0] = util.Map(strings.Split(lines[3], " "), util.ParseInt)
-	seedsToSoilData[1] = util.Map(strings.Split(lines[4], " "), util.ParseInt)
-
-	// dump.P(seeds)
-	// dump.P(seedsToSoilData)
-	dump.P(getMappedId(seeds[0], seedsToSoilData))
-	dump.P(getMappedId(seeds[1], seedsToSoilData))
-	dump.P(getMappedId(seeds[2], seedsToSoilData))
-	dump.P(getMappedId(seeds[3], seedsToSoilData))
-
-	return result
+	return slices.Min(locationIds)
 }
 
 func part02(lines []string) int {
