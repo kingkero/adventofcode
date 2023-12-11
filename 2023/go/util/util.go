@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"log"
 	"os"
+	"strconv"
 )
 
 // Read a complete file line by line into memory.
@@ -32,4 +33,20 @@ func SumInts(values []int) int {
 		result += val
 	}
 	return result
+}
+
+func Map[T, U any](ts []T, f func(T) U) []U {
+	us := make([]U, len(ts))
+	for i := range ts {
+		us[i] = f(ts[i])
+	}
+	return us
+}
+
+func ParseInt(value string) int {
+	val, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return int(val)
 }
