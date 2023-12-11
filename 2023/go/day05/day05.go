@@ -39,8 +39,8 @@ func getMapData(start int, lines []string) ([][]int, int) {
 	return data, -1
 }
 
-func getLocationIds(lines []string) []int {
-	ids := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
+func getLocationIds(seeds []int, lines []string) []int {
+	ids := seeds
 
 	var data [][]int
 	lastLine := 1
@@ -61,15 +61,25 @@ func getLocationIds(lines []string) []int {
 }
 
 func part01(lines []string) int {
-	locationIds := getLocationIds(lines)
+	seeds := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
+	locationIds := getLocationIds(seeds, lines)
 
 	return slices.Min(locationIds)
 }
 
 func part02(lines []string) int {
-	result := 0
+	seedRanges := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
 
-	return result
+	var seeds []int
+	for i := 0; i < len(seedRanges); i += 2 {
+		for j := 0; j < seedRanges[i+1]; j++ {
+			seeds = append(seeds, seedRanges[i]+j)
+		}
+	}
+
+	locationIds := getLocationIds(seeds, lines)
+
+	return slices.Min(locationIds)
 }
 
 func Solve(input string) (int, int) {
