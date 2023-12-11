@@ -85,6 +85,9 @@ func part02(lines []string) int {
 	// var mins []int
 
 	for i := 0; i < len(seedRanges); i += 2 {
+		// TODO:
+		// instead of comparing single seed values
+		// use the ranges (read: left and right boundary)
 		valueRange := []int{seedRanges[i], seedRanges[i+1]}
 		dump.P(valueRange)
 	}
