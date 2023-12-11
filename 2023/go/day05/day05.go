@@ -50,27 +50,30 @@ func getMapData(start int, lines []string) ([][]int, int) {
 	return data, -1
 }
 
+func getUpdatedIdsFromPreCalculatedMap(start int, lines []string, ids []int) ([]int, int) {
+	data, lastLine := getMapData(start+2, lines)
+	lookup := getMap(data)
+
+	tmp := make([]int, len(ids))
+	for i, id := range ids {
+		mapped, ok := lookup[id]
+		if ok {
+			tmp[i] = mapped
+		} else {
+			tmp[i] = id
+		}
+	}
+
+	return tmp, lastLine
+}
+
 func getLocationIds(seeds []int, lines []string) []int {
 	ids := seeds
 
-	var data [][]int
 	lastLine := 1
 
 	for {
-		data, lastLine = getMapData(lastLine+2, lines)
-		lookup := getMap(data)
-
-		tmp := make([]int, len(ids))
-		for i, id := range ids {
-			mapped, ok := lookup[id]
-			if ok {
-				tmp[i] = mapped
-			} else {
-				tmp[i] = id
-			}
-		}
-
-		ids = tmp
+		ids, lastLine = getUpdatedIdsFromPreCalculatedMap(lastLine, lines, ids)
 
 		if lastLine == -1 {
 			return ids
@@ -85,19 +88,26 @@ func part01(lines []string) int {
 	return slices.Min(locationIds)
 }
 
+func evaluateSingleRange(seeds []int, lines []string) int {
+	locationIds := getLocationIds(seeds, lines)
+	return slices.Min(locationIds)
+}
+
 func part02(lines []string) int {
 	seedRanges := util.Map(strings.Split(strings.Split(lines[0], ": ")[1], " "), util.ParseInt)
 
-	var seeds []int
+	var mins []int
+
 	for i := 0; i < len(seedRanges); i += 2 {
+		var seeds []int
 		for j := 0; j < seedRanges[i+1]; j++ {
 			seeds = append(seeds, seedRanges[i]+j)
 		}
+
+		mins = append(mins, evaluateSingleRange(seeds, lines))
 	}
 
-	locationIds := getLocationIds(seeds, lines)
-
-	return slices.Min(locationIds)
+	return slices.Min(mins)
 }
 
 func Solve(input string) (int, int) {
