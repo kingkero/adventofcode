@@ -167,14 +167,14 @@ func getStrengthPart02(hand string) (int, []int) {
 		if fourOfAKind > 0 {
 			fiveOfAKind++
 			fourOfAKind--
-		}
-		if threeOfAKinds > 0 {
+		} else if threeOfAKinds > 0 {
 			fourOfAKind++
 			threeOfAKinds--
-		}
-		if pairs > 0 {
+		} else if pairs > 0 {
 			threeOfAKinds++
 			pairs--
+		} else {
+			pairs++
 		}
 	}
 
