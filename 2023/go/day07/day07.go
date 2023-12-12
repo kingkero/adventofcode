@@ -98,10 +98,126 @@ func getStrength(hand string) (int, []int) {
 	return 1, cards
 }
 
+func getStrengthPart02(hand string) (int, []int) {
+	cardToValue := map[string]int{
+		"2": 2,
+		"3": 3,
+		"4": 4,
+		"5": 5,
+		"6": 6,
+		"7": 7,
+		"8": 8,
+		"9": 9,
+		"T": 10,
+		"J": 1,
+		"Q": 12,
+		"K": 13,
+		"A": 14,
+	}
+
+	cards := util.Map(strings.Split(hand, ""), func(card string) int {
+		return cardToValue[card]
+	})
+	cardsSorted := slices.Clone(cards)
+	slices.Sort(cardsSorted)
+
+	jokers, length, pairs, threeOfAKinds, fourOfAKind, fiveOfAKind := 0, 1, 0, 0, 0, 0
+	for i := 0; i < len(cardsSorted) && cardsSorted[i] == cardToValue["J"]; i++ {
+		jokers++
+	}
+	if jokers == 5 {
+		return 7, cards
+	}
+	cardsSorted = cardsSorted[jokers:]
+	prev := cardsSorted[0]
+	for i := 1; i < len(cardsSorted); i++ {
+		if cardsSorted[i] == prev {
+			length++
+			prev = cardsSorted[i]
+			continue
+		}
+
+		if length == 2 {
+			pairs++
+		} else if length == 3 {
+			threeOfAKinds++
+		} else if length == 4 {
+			fourOfAKind++
+		} else if length == 5 {
+			fiveOfAKind++
+		}
+
+		prev = cardsSorted[i]
+		length = 1
+	}
+
+	if length > 1 {
+		if length == 2 {
+			pairs++
+		} else if length == 3 {
+			threeOfAKinds++
+		} else if length == 4 {
+			fourOfAKind++
+		} else if length == 5 {
+			fiveOfAKind++
+		}
+	}
+
+	for ; jokers > 0; jokers-- {
+		if fourOfAKind > 0 {
+			fiveOfAKind++
+			fourOfAKind--
+		}
+		if threeOfAKinds > 0 {
+			fourOfAKind++
+			threeOfAKinds--
+		}
+		if pairs > 0 {
+			threeOfAKinds++
+			pairs--
+		}
+	}
+
+	if fiveOfAKind > 0 {
+		return 7, cards
+	}
+	if fourOfAKind > 0 {
+		return 6, cards
+	}
+	if pairs > 0 && threeOfAKinds > 0 {
+		return 5, cards
+	}
+	if threeOfAKinds > 0 {
+		return 4, cards
+	}
+	if pairs > 1 {
+		return 3, cards
+	}
+	if pairs > 0 {
+		return 2, cards
+	}
+
+	return 1, cards
+}
+
 type WeightedHand struct {
 	sorted []int
 	weight int
 	bid    int
+}
+
+func sortHands(a WeightedHand, b WeightedHand) int {
+	if a.weight != b.weight {
+		return cmp.Compare(a.weight, b.weight)
+	}
+
+	for i := range a.sorted {
+		if a.sorted[i] != b.sorted[i] {
+			return cmp.Compare(a.sorted[i], b.sorted[i])
+		}
+	}
+
+	return 0
 }
 
 func part01(lines []string) int {
@@ -117,19 +233,7 @@ func part01(lines []string) int {
 		hands = append(hands, tmp)
 	}
 
-	slices.SortFunc(hands, func(a WeightedHand, b WeightedHand) int {
-		if a.weight != b.weight {
-			return cmp.Compare(a.weight, b.weight)
-		}
-
-		for i := range a.sorted {
-			if a.sorted[i] != b.sorted[i] {
-				return cmp.Compare(a.sorted[i], b.sorted[i])
-			}
-		}
-
-		return 0
-	})
+	slices.SortFunc(hands, sortHands)
 
 	result := 0
 	for i, hand := range hands {
@@ -140,7 +244,26 @@ func part01(lines []string) int {
 }
 
 func part02(lines []string) int {
-	return 0
+	var hands []WeightedHand
+	for _, line := range lines {
+		parts := strings.Split(line, " ")
+
+		hand := parts[0]
+		bid := util.ParseInt(parts[1])
+
+		strength, handValues := getStrengthPart02(hand)
+		var tmp = WeightedHand{handValues, strength, bid}
+		hands = append(hands, tmp)
+	}
+
+	slices.SortFunc(hands, sortHands)
+
+	result := 0
+	for i, hand := range hands {
+		result += hand.bid * (i + 1)
+	}
+
+	return result
 }
 
 func Solve(input string) (int, int) {
