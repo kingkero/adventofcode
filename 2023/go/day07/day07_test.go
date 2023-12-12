@@ -3,7 +3,7 @@ package day07
 import "testing"
 
 func TestSolutionDay07(t *testing.T) {
-	solution01, solution02 := -1, -1
+	solution01, solution02 := 250254244, 250087440
 	part01, part02 := Solve("./input.txt")
 
 	if part01 != solution01 {
