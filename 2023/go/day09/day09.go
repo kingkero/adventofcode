@@ -7,7 +7,6 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
-// returns (nextGuess, isOnlyZeroes)
 func guessNextValue(series []int) int {
 	var guessLines [][]int
 	current := series
@@ -31,7 +30,8 @@ func guessNextValue(series []int) int {
 	return nextVal
 }
 
-// Get difference between elements
+// Difference between each value in the slice, second return argument is true if
+// all differences are 0s.
 func getDifference(series []int) ([]int, bool) {
 	nextGuess := make([]int, len(series)-1)
 	allZeroes := true
@@ -45,14 +45,9 @@ func getDifference(series []int) ([]int, bool) {
 }
 
 func part01(lines []string) int {
-	nextValues := make([]int, len(lines))
-	for i, line := range lines {
-		nextValues[i] = guessNextValue(util.Map(strings.Split(line, " "), util.ParseInt))
-	}
-
 	result := 0
-	for _, val := range nextValues {
-		result += val
+	for _, line := range lines {
+		result += guessNextValue(util.Map(strings.Split(line, " "), util.ParseInt))
 	}
 
 	return result
