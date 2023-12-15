@@ -4,7 +4,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -49,11 +48,46 @@ func (matrix *Matrix) getConnection(from Direction, i, j int) ([]int, bool) {
 	}
 
 	switch matrix.data[i][j] {
+	case "|":
+		if from == NORTH {
+			return []int{i + 1, j}, true
+		}
+		if from == SOUTH {
+			return []int{i - 1, j}, true
+		}
+	case "-":
+		if from == WEST {
+			return []int{i, j + 1}, true
+		}
+		if from == EAST {
+			return []int{j, i - 1}, true
+		}
+	case "L":
+		if from == NORTH {
+			return []int{i, j + 1}, true
+		}
+		if from == EAST {
+			return []int{j - 1, i}, true
+		}
 	case "J":
 		if from == WEST {
 			return []int{i - 1, j}, true
 		} else if from == NORTH {
 			return []int{i, j - 1}, true
+		}
+	case "7":
+		if from == SOUTH {
+			return []int{i, j - 1}, true
+		}
+		if from == WEST {
+			return []int{j + 1, i}, true
+		}
+	case "F":
+		if from == SOUTH {
+			return []int{i, j + 1}, true
+		}
+		if from == EAST {
+			return []int{j + 1, i}, true
 		}
 	}
 
@@ -66,17 +100,19 @@ func part01(lines []string) int {
 	matrix := NewMatrix(lines)
 
 	i, j := matrix.findStart()
+
+	var connections [][]int
 	if connection, ok := matrix.getConnection(EAST, i, j+1); ok {
-		dump.P(connection)
+		connections = append(connections, connection)
 	}
 	if connection, ok := matrix.getConnection(SOUTH, i-1, j); ok {
-		dump.P(connection)
+		connections = append(connections, connection)
 	}
 	if connection, ok := matrix.getConnection(WEST, i, j+1); ok {
-		dump.P(connection)
+		connections = append(connections, connection)
 	}
 	if connection, ok := matrix.getConnection(NORTH, i+1, j); ok {
-		dump.P(connection)
+		connections = append(connections, connection)
 	}
 
 	return result
