@@ -2,7 +2,9 @@ package day08
 
 import (
 	"log"
+	"math"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
@@ -25,8 +27,7 @@ func (node *Node) step(direction string) *Node {
 	return node.right
 }
 
-func getMinimumSteps(instructions []string, nodes map[string]*Node) int {
-	checkNode := nodes["AAA"]
+func getMinimumSteps(instructions []string, nodes map[string]*Node, checkNode *Node) int {
 	steps := 0
 	for {
 		checkNode = checkNode.step(instructions[steps%len(instructions)])
@@ -39,10 +40,62 @@ func getMinimumSteps(instructions []string, nodes map[string]*Node) int {
 	}
 }
 
-func getRules()
+func sieveOfEratosthenes(N int) (primes []int) {
+	b := make([]bool, N)
+	for i := 2; i < N; i++ {
+		if b[i] == true {
+			continue
+		}
+		primes = append(primes, i)
+		for k := i * i; k < N; k += i {
+			b[k] = true
+		}
+	}
+	return
+}
 
-func getMinimumStepsParallel(instructions []string, nodes map[string]*Node, startNodes []*Node) int {
-	return 0
+func getPrimeFactors(value int, primes []int) map[int]int {
+	factors := make(map[int]int)
+	for _, prime := range primes {
+		if prime > value {
+			break
+		}
+
+		for value%prime == 0 {
+			value /= prime
+			factors[prime]++
+		}
+	}
+	return factors
+}
+
+func getMinimumStepsParallel(instructions []string, nodes map[string]*Node, checkNodes []*Node) int {
+	steps := make([]int, len(checkNodes))
+	// once we know how many steps for each node
+	for i, node := range checkNodes {
+		steps[i] = getMinimumSteps(instructions, nodes, node)
+	}
+	slices.Sort(steps)
+
+	uniqueSteps := slices.Compact(steps)
+	primes := sieveOfEratosthenes(slices.Max(uniqueSteps))
+
+	// collect their prime factors to find least common multiple of all exits
+	primeFactors := make(map[int]int)
+	for _, step := range uniqueSteps {
+		for prime, occurences := range getPrimeFactors(step, primes) {
+			if existingFactor, ok := primeFactors[prime]; !ok || existingFactor < occurences {
+				primeFactors[prime] = occurences
+			}
+		}
+	}
+
+	result := 1.0
+	for prime, occurences := range primeFactors {
+		result *= math.Pow(float64(prime), float64(occurences))
+	}
+
+	return int(result)
 }
 
 func part01(lines []string) int {
@@ -68,7 +121,7 @@ func part01(lines []string) int {
 		node.right = nodes[node.rightData]
 	}
 
-	return getMinimumSteps(strings.Split(lines[0], ""), nodes)
+	return getMinimumSteps(strings.Split(lines[0], ""), nodes, nodes["AAA"])
 }
 
 func part02(lines []string) int {
