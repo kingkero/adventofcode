@@ -7,19 +7,25 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
-func guessNextValue(series []int) int {
-	var guessLines [][]int
+func getGuessLines(series []int) [][]int {
+	var result [][]int
 	current := series
 
-	guessLines = append(guessLines, series)
+	result = append(result, series)
 	for {
 		next, isAllZeroes := getDifference(current)
-		guessLines = append(guessLines, next)
+		result = append(result, next)
 		current = next
 		if isAllZeroes {
 			break
 		}
 	}
+
+	return result
+}
+
+func guessNextValue(series []int) int {
+	guessLines := getGuessLines(series)
 
 	nextVal := 0
 	for i := len(guessLines) - 1; i > 0; i-- {
