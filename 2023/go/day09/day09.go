@@ -36,6 +36,18 @@ func guessNextValue(series []int) int {
 	return nextVal
 }
 
+func guessPreviousValue(series []int) int {
+	guessLines := getGuessLines(series)
+
+	prevVal := 0
+	for i := len(guessLines) - 1; i > 0; i-- {
+		prevVal = guessLines[i-1][0] - guessLines[i][0]
+		guessLines[i-1][0] = prevVal
+	}
+
+	return prevVal
+}
+
 // Difference between each value in the slice, second return argument is true if
 // all differences are 0s.
 func getDifference(series []int) ([]int, bool) {
@@ -60,7 +72,12 @@ func part01(lines []string) int {
 }
 
 func part02(lines []string) int {
-	return 0
+	result := 0
+	for _, line := range lines {
+		result += guessPreviousValue(util.Map(strings.Split(line, " "), util.ParseInt))
+	}
+
+	return result
 }
 
 func Solve(input string) (int, int) {
