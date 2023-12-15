@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
+	"text/tabwriter"
 	"time"
 
 	"github.com/kingkero/adventofcode/2023/go/day01"
@@ -16,44 +19,46 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/day10"
 )
 
+func getValueWithLeadingZeroes(value int) string {
+	prefix := ""
+	if value < 10 {
+		prefix = "0"
+	}
+
+	return prefix + strconv.Itoa(value)
+}
+
+type Solver func(file string) (int, int)
+
+func writeSolvers(writer *tabwriter.Writer, solvers ...Solver) {
+	previous := time.Now()
+	p01, p02 := 0, 0
+
+	for i := len(solvers) - 1; i >= 0; i-- {
+		name := "day" + getValueWithLeadingZeroes(i+1)
+
+		p01, p02 = solvers[i]("./" + name + "/input.txt")
+		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", i+1, p01, p02, time.Since(previous))
+		previous = time.Now()
+	}
+}
+
 func main() {
-	start := time.Now()
-	p01, p02 := day01.Solve("./day01/input.txt")
-	fmt.Printf("Day 1:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
+	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 
-	start = time.Now()
-	p01, p02 = day02.Solve("./day02/input.txt")
-	fmt.Printf("Day 2:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
+	writeSolvers(
+		writer,
+		day01.Solve,
+		day02.Solve,
+		day03.Solve,
+		day04.Solve,
+		day05.Solve,
+		day06.Solve,
+		day07.Solve,
+		day08.Solve,
+		day09.Solve,
+		day10.Solve,
+	)
 
-	start = time.Now()
-	p01, p02 = day03.Solve("./day03/input.txt")
-	fmt.Printf("Day 3:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day04.Solve("./day04/input.txt")
-	fmt.Printf("Day 4:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day05.Solve("./day05/input.txt")
-	fmt.Printf("Day 5:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day06.Solve("./day06/input.txt")
-	fmt.Printf("Day 6:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day07.Solve("./day07/input.txt")
-	fmt.Printf("Day 7:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day08.Solve("./day08/input.txt")
-	fmt.Printf("Day 8:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day09.Solve("./day09/input.txt")
-	fmt.Printf("Day 9:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
-
-	start = time.Now()
-	p01, p02 = day10.Solve("./day10/input.txt")
-	fmt.Printf("Day 19:\t%v\t/\t%v\ttook %v\n", p01, p02, time.Since(start))
+	writer.Flush()
 }
