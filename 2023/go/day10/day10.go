@@ -8,22 +8,6 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
-type Matrix struct {
-	data [][]string
-}
-
-func (matrix Matrix) findStart() (int, int) {
-	for i, line := range matrix.data {
-		for j, field := range line {
-			if field == "S" {
-				return i, j
-			}
-		}
-	}
-	log.Fatal("Could not find start!")
-	return -1, -1
-}
-
 type Direction string
 
 const (
@@ -33,13 +17,34 @@ const (
 	NORTH           = "n"
 )
 
+type Matrix struct {
+	data  [][]string
+	start []int
+}
+
+func (matrix *Matrix) findStart() {
+	for i, line := range matrix.data {
+		for j, field := range line {
+			if field == "S" {
+				matrix.start = []int{i, j}
+				return
+			}
+		}
+	}
+	log.Fatal("Could not find start!")
+	return
+}
+
 func NewMatrix(lines []string) *Matrix {
 	data := make([][]string, len(lines))
 	for i, line := range lines {
 		data[i] = strings.Split(line, "")
 	}
 
-	return &Matrix{data}
+	result := &Matrix{data, nil}
+	result.findStart()
+
+	return result
 }
 
 func (matrix Matrix) getConnection(from Direction, i, j int) []int {
@@ -112,26 +117,53 @@ func (matrix Matrix) getAllConnections(i, j int) [][]int {
 	return connections
 }
 
+/*
+func (matrix Matrix) getRightLength(start []int) int {
+	length := 0
+
+	prev := start
+	compareI := matrix.start[0]
+	compareJ := matrix.start[1]
+	for {
+		nextConnection := util.Filter(matrix.getAllConnections(prev[0], prev[1]), func(connection []int) bool {
+			return connection[0] != compareI || connection[1] != compareJ
+		})
+
+		fmt.Printf("after %d/%d => %d/%d found %v\n", compareI, compareJ, prev[0], prev[1], nextConnection)
+
+		if length > 3 {
+			return length
+		}
+
+		if len(nextConnection) == 0 {
+			return length
+		}
+
+		compareI = prev[0]
+		compareJ = prev[1]
+		prev = nextConnection[0]
+		length += 2
+	}
+
+	return length
+}
+*/
+
 func part01(lines []string) int {
 	result := 0
 
 	matrix := NewMatrix(lines)
 	// lengths := make([]int, 2)
 
-	i, j := matrix.findStart()
+	dump.P(matrix.start)
 
-	startConnections := matrix.getAllConnections(i, j)
+	//startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
+	//dump.P("startConnections", startConnections)
+	/*
+		checkRight := matrix.getRightLength(startConnections[0])
 
-	firstRight := matrix.getAllConnections(startConnections[0][0], startConnections[0][1])
-	dump.P("firstRight", util.Filter(firstRight, func(connection []int) bool {
-		return connection[0] != i || connection[1] != j
-	}))
-
-	firstLeft := matrix.getAllConnections(startConnections[1][0], startConnections[1][1])
-	dump.P("firstLeft", util.Filter(firstLeft, func(connection []int) bool {
-		return connection[0] != i || connection[1] != j
-	}))
-
+		dump.P(checkRight)
+	*/
 	return result
 }
 
