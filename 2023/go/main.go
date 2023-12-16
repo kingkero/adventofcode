@@ -40,6 +40,8 @@ func writeSolvers(writer *tabwriter.Writer, solvers ...Solver) {
 		p01, p02 = solvers[i]("./" + name + "/input.txt")
 		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", i+1, p01, p02, time.Since(previous))
 		previous = time.Now()
+
+		writer.Flush()
 	}
 }
 
@@ -59,6 +61,4 @@ func main() {
 		day09.Solve,
 		day10.Solve,
 	)
-
-	writer.Flush()
 }
