@@ -65,14 +65,14 @@ func (matrix Matrix) getConnection(from Direction, i, j int) []int {
 			return []int{i, j + 1}
 		}
 		if from == EAST {
-			return []int{j, i - 1}
+			return []int{i, j - 1}
 		}
 	case "L":
 		if from == NORTH {
 			return []int{i, j + 1}
 		}
 		if from == EAST {
-			return []int{j - 1, i}
+			return []int{i - 1, j}
 		}
 	case "J":
 		if from == WEST {
@@ -85,14 +85,14 @@ func (matrix Matrix) getConnection(from Direction, i, j int) []int {
 			return []int{i, j - 1}
 		}
 		if from == WEST {
-			return []int{j + 1, i}
+			return []int{i + 1, j}
 		}
 	case "F":
 		if from == SOUTH {
 			return []int{i, j + 1}
 		}
 		if from == EAST {
-			return []int{j + 1, i}
+			return []int{i + 1, j}
 		}
 	}
 
@@ -117,48 +117,33 @@ func (matrix Matrix) getAllConnections(i, j int) [][]int {
 	return connections
 }
 
-/*
-func (matrix Matrix) getRightLength(start []int) int {
-	length := 0
+func (matrix *Matrix) getNextConnection(lookFrom, before []int) []int {
+	allConnections := util.Filter(matrix.getAllConnections(lookFrom[0], lookFrom[1]), func(connection []int) bool {
+		return connection[0] != before[0] || connection[1] != before[1]
+	})
 
-	prev := start
-	compareI := matrix.start[0]
-	compareJ := matrix.start[1]
-	for {
-		nextConnection := util.Filter(matrix.getAllConnections(prev[0], prev[1]), func(connection []int) bool {
-			return connection[0] != compareI || connection[1] != compareJ
-		})
-
-		fmt.Printf("after %d/%d => %d/%d found %v\n", compareI, compareJ, prev[0], prev[1], nextConnection)
-
-		if length > 3 {
-			return length
-		}
-
-		if len(nextConnection) == 0 {
-			return length
-		}
-
-		compareI = prev[0]
-		compareJ = prev[1]
-		prev = nextConnection[0]
-		length += 2
+	if len(allConnections) == 1 {
+		return allConnections[0]
 	}
 
-	return length
+	return nil
 }
-*/
 
 func part01(lines []string) int {
 	result := 0
 
 	matrix := NewMatrix(lines)
+	dump.P("starting at", matrix.start)
 	// lengths := make([]int, 2)
 
-	dump.P(matrix.start)
+	startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
+	dump.P("startConnections are", startConnections)
 
-	//startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
-	//dump.P("startConnections", startConnections)
+	nextRight := matrix.getNextConnection(startConnections[0], matrix.start)
+	dump.P("nextRight is", nextRight)
+	nextRight = matrix.getNextConnection(nextRight, startConnections[0])
+	dump.P("nextRight is", nextRight)
+
 	/*
 		checkRight := matrix.getRightLength(startConnections[0])
 
