@@ -48,6 +48,17 @@ func Map[T, U any](ts []T, f func(T) U) []U {
 	}
 	return us
 }
+
+func Filter[T any](ts []T, f func(T) bool) []T {
+	var result []T
+	for _, t := range ts {
+		if f(t) {
+			result = append(result, t)
+		}
+	}
+	return result
+}
+
 func Sum[T Number](ts []T) T {
 	var sum T
 	for i := range ts {
