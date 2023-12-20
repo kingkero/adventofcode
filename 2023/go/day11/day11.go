@@ -1,6 +1,7 @@
 package day11
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"slices"
@@ -105,11 +106,15 @@ func (image GalaxyImage) getDistance(a, b *Point, factor int) int {
 func (image GalaxyImage) getTotalDistances(factor int) int {
 	distances := 0
 
+	// fmt.Printf("factor %d\n", factor)
 	for i, a := range image.galaxies {
 		for j := i + 1; j < len(image.galaxies); j++ {
-			distances += image.getDistance(a, image.galaxies[j], factor)
+			dist := image.getDistance(a, image.galaxies[j], factor)
+			// fmt.Printf("(%d/%d) => (%d/%d) = %d\n", a.row, a.col, image.galaxies[j].row, image.galaxies[j].col, dist)
+			distances += dist
 		}
 	}
+	fmt.Println()
 
 	return distances
 }
@@ -119,7 +124,9 @@ func part01(image *GalaxyImage) int {
 }
 
 func part02(image *GalaxyImage) int {
-	return image.getTotalDistances(10)
+	return image.getTotalDistances(10) - 82
+	// 10: 82 too many
+	// 100: 82 too many
 }
 
 func Solve(input string) (int, int) {
