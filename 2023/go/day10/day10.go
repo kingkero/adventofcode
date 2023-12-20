@@ -143,8 +143,7 @@ func getPreviousDirection(current, prev []int) Direction {
 	return NORTH
 }
 
-func part01(lines []string) int {
-	matrix := NewMatrix(lines)
+func part01(matrix *Matrix) int {
 	length := 2
 
 	startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
@@ -176,9 +175,9 @@ func part01(lines []string) int {
 	// remember to close the file
 	defer f.Close()
 
-	for i, line := range lines {
-		val := strings.Repeat("_", len(line))
-		for j := 0; j < len(line); j++ {
+	for i := 0; i < len(matrix.data); i++ {
+		val := strings.Repeat("_", len(matrix.data[i]))
+		for j := 0; j < len(matrix.data[i]); j++ {
 			if slices.ContainsFunc(matrix.visited, func(pos []int) bool {
 				return pos[0] == i && pos[1] == j
 			}) {
@@ -198,7 +197,7 @@ func part01(lines []string) int {
 	return int(math.Floor(float64(length) / 2.0))
 }
 
-func part02(lines []string) int {
+func part02(matrix *Matrix) int {
 	result := 0
 
 	return result
@@ -210,5 +209,7 @@ func Solve(input string) (int, int) {
 		log.Fatal("Could not open file "+input, err)
 	}
 
-	return part01(lines), part02(lines)
+	matrix := NewMatrix(lines)
+
+	return part01(matrix), part02(matrix)
 }
