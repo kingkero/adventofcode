@@ -144,11 +144,14 @@ func (matrix Matrix) getAllConnections(i, j int) [][]int {
 	return connections
 }
 
-/*
 func (matrix *Matrix) getNextConnection(lookFrom, before []int) []int {
 	allConnections := util.Filter(matrix.getAllConnections(lookFrom[0], lookFrom[1]), func(connection []int) bool {
 		return connection[0] != before[0] || connection[1] != before[1]
 	})
+
+	if lookFrom[0] == 0 && lookFrom[1] == 2 {
+		dump.P(allConnections)
+	}
 
 	if len(allConnections) > 0 {
 		return allConnections[0]
@@ -156,7 +159,6 @@ func (matrix *Matrix) getNextConnection(lookFrom, before []int) []int {
 
 	return nil
 }
-*/
 
 func part01(lines []string) int {
 	matrix := NewMatrix(lines)
@@ -164,43 +166,49 @@ func part01(lines []string) int {
 
 	startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
 
-	fmt.Printf("start at %v has connections %v\n", matrix.start, startConnections)
+	fmt.Printf("Start is at %v, check length from %v\n", matrix.start, startConnections[0])
 
-	visited := [][]int{matrix.start}
+	ignore := matrix.start
+	previous := startConnections[0]
+	visited := [][]int{ignore, previous}
+
+	nextRight := matrix.getNextConnection(previous, ignore)
+
+	for nextRight != nil {
+		fmt.Printf("see \"%v\" at %v, next is %v\n", matrix.data[previous[0]][previous[1]], previous, nextRight)
+		length++
+
+		visited = append(visited, nextRight)
+		ignore = previous
+		previous = nextRight
+		nextRight = matrix.getNextConnection(previous, ignore)
+	}
+
 	/*
 
-			ignore := matrix.start
-			previous := startConnections[0]
-			visited = append(visited, ignore)
-			visited = append(visited, previous)
-
-			nextRight := matrix.getNextConnection(previous, ignore)
-
-			for nextRight != nil && matrix.data[nextRight[0]][nextRight[1]] != "S" {
-				fmt.Printf("%v => %v \"%v\" (length %d)\n", previous, nextRight, matrix.data[nextRight[0]][nextRight[1]], length)
-				if slices.ContainsFunc(visited, func(val []int) bool {
-					return val[0] == nextRight[0] && val[1] == nextRight[1]
-				}) {
-					fmt.Println("  already visited!")
-					nextRight = nil
-					continue
-				}
-				visited = append(visited, nextRight)
-				length += 2
-
-				ignore = previous
-				previous = nextRight
-
-				nextRight = matrix.getNextConnection(previous, ignore)
-
+		for nextRight != nil && matrix.data[nextRight[0]][nextRight[1]] != "S" {
+			fmt.Printf("%v => %v \"%v\" (length %d)\n", previous, nextRight, matrix.data[nextRight[0]][nextRight[1]], length)
+			if slices.ContainsFunc(visited, func(val []int) bool {
+				return val[0] == nextRight[0] && val[1] == nextRight[1]
+			}) {
+				fmt.Println("  already visited!")
+				nextRight = nil
+				continue
 			}
+			visited = append(visited, nextRight)
+			length += 2
+
+			ignore = previous
+			previous = nextRight
+
+			nextRight = matrix.getNextConnection(previous, ignore)
+
+		}
 
 		if nextRight != nil {
 			length += 2
 		}
 	*/
-
-	dump.P(visited)
 
 	// create file
 	f, err := os.Create("output.txt")
