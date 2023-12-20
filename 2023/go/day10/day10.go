@@ -1,15 +1,12 @@
 package day10
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"os"
-	"regexp"
 	"slices"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -150,8 +147,6 @@ func part01(matrix *Matrix) int {
 
 	startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
 
-	fmt.Printf("Start is at %v, check length from %v\n", matrix.start, startConnections[0])
-
 	ignore := matrix.start
 	previous := startConnections[0]
 
@@ -201,11 +196,11 @@ func part02(matrix *Matrix) int {
 			log.Fatal(err)
 		}
 
-		dump.P(val)
+		// dump.P(val)
 
-		r1 := regexp.MustCompile("X+")
+		// r1 := regexp.MustCompile("X+")
 
-		dump.P(r1.Split(val, -1))
+		// dump.P(r1.Split(val, -1))
 	}
 
 	return result
