@@ -21,8 +21,9 @@ const (
 )
 
 type Matrix struct {
-	data  [][]string
-	start []int
+	data    [][]string
+	start   []int
+	visited [][]int
 }
 
 func (matrix *Matrix) findStart() {
@@ -43,8 +44,9 @@ func NewMatrix(lines []string) *Matrix {
 		data[i] = strings.Split(line, "")
 	}
 
-	result := &Matrix{data, nil}
+	result := &Matrix{data, nil, nil}
 	result.findStart()
+	result.visited = append(result.visited, result.start)
 
 	return result
 }
@@ -152,12 +154,12 @@ func part01(lines []string) int {
 	ignore := matrix.start
 	previous := startConnections[0]
 
-	visited := [][]int{ignore, previous}
+	matrix.visited = append(matrix.visited, previous)
 	from := getPreviousDirection(previous, ignore)
 	next := matrix.getConnection(from, previous[0], previous[1])
 
 	for next != nil {
-		visited = append(visited, next)
+		matrix.visited = append(matrix.visited, next)
 		ignore = previous
 		previous = next
 		from = getPreviousDirection(previous, ignore)
@@ -177,7 +179,7 @@ func part01(lines []string) int {
 	for i, line := range lines {
 		val := strings.Repeat("_", len(line))
 		for j := 0; j < len(line); j++ {
-			if slices.ContainsFunc(visited, func(pos []int) bool {
+			if slices.ContainsFunc(matrix.visited, func(pos []int) bool {
 				return pos[0] == i && pos[1] == j
 			}) {
 				left := ""
