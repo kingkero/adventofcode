@@ -38,7 +38,9 @@ type Pair struct {
 }
 
 type GalaxyImage struct {
-	expandedFields [][]string
+	originalFields [][]string
+	expandRows     []int
+	expandCols     []int
 	galaxies       []*Point
 }
 
@@ -46,17 +48,17 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 	var expandRows, expandCols []int
 	var galaxies []*Point
 
-	fields := make([][]string, len(lines))
+	originalFields := make([][]string, len(lines))
 	for row := 0; row < len(lines); row++ {
-		fields[row] = strings.Split(lines[row], "")
+		originalFields[row] = strings.Split(lines[row], "")
 
-		if isRowEmpty(fields[row]) {
+		if isRowEmpty(originalFields[row]) {
 			expandRows = append(expandRows, row+len(expandRows))
 		}
 	}
 
-	for col := 0; col < len(fields[0]); col++ {
-		if isColEmpty(fields, col) {
+	for col := 0; col < len(originalFields[0]); col++ {
+		if isColEmpty(originalFields, col) {
 			expandCols = append(expandCols, col+len(expandCols))
 		}
 	}
@@ -64,38 +66,30 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 	newRows := len(lines) + len(expandRows)
 	newCols := len(lines[0]) + len(expandCols)
 
-	expandedFields := make([][]string, newRows)
-
 	referenceRow := 0
 	for row := 0; row < newRows; row++ {
-		newRow := make([]string, newCols)
 		referenceCol := 0
 		for col := 0; col < newCols; col++ {
-			if fields[referenceRow][referenceCol] == "#" {
+			if originalFields[referenceRow][referenceCol] == "#" {
 				galaxies = append(galaxies, &Point{row, col})
 			}
-			newRow[col] = fields[referenceRow][referenceCol]
 			referenceCol++
 
 			if slices.Contains(expandCols, col) {
 				col++
-				newRow[col] = "."
 			}
 		}
-		expandedFields[row] = newRow
 		referenceRow++
 
 		if slices.Contains(expandRows, row) {
 			row++
-			expandedFields[row] = strings.Split(strings.Repeat(".", newCols), "")
 		}
 	}
 
-	return &GalaxyImage{expandedFields, galaxies}
+	return &GalaxyImage{originalFields, expandRows, expandCols, galaxies}
 }
 
-func part01(lines []string) int {
-	image := NewGalaxyImage(lines)
+func part01(image *GalaxyImage) int {
 	distances := 0
 
 	for i, a := range image.galaxies {
@@ -116,7 +110,7 @@ func part01(lines []string) int {
 	return distances
 }
 
-func part02(lines []string) int {
+func part02(image *GalaxyImage) int {
 	result := 0
 
 	return result
@@ -128,5 +122,7 @@ func Solve(input string) (int, int) {
 		log.Fatal("Could not open file "+input, err)
 	}
 
-	return part01(lines), part02(lines)
+	image := NewGalaxyImage(lines)
+
+	return part01(image), part02(image)
 }
