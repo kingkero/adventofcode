@@ -1,7 +1,11 @@
 package day10
 
 import (
+	"fmt"
 	"log"
+	"math"
+	"os"
+	"slices"
 	"strings"
 
 	"github.com/gookit/goutil/dump"
@@ -32,7 +36,6 @@ func (matrix *Matrix) findStart() {
 		}
 	}
 	log.Fatal("Could not find start!")
-	return
 }
 
 func NewMatrix(lines []string) *Matrix {
@@ -99,57 +102,134 @@ func (matrix Matrix) getConnection(from Direction, i, j int) []int {
 	return nil
 }
 
+type CheckSide struct {
+	fromDirection Direction
+	coordinates   []int
+}
+
 func (matrix Matrix) getAllConnections(i, j int) [][]int {
+	checks := []CheckSide{
+		{EAST, []int{i, j - 1}},
+		{SOUTH, []int{i - 1, j}},
+		{WEST, []int{i, j + 1}},
+		{NORTH, []int{i + 1, j}},
+	}
+
 	var connections [][]int
-	if connection := matrix.getConnection(EAST, i, j-1); connection != nil {
-		connections = append(connections, connection)
+	for _, check := range checks {
+		if connection := matrix.getConnection(check.fromDirection, check.coordinates[0], check.coordinates[1]); connection != nil {
+			connections = append(connections, check.coordinates)
+		}
 	}
-	if connection := matrix.getConnection(SOUTH, i-1, j); connection != nil {
-		connections = append(connections, connection)
-	}
-	if connection := matrix.getConnection(WEST, i, j+1); connection != nil {
-		connections = append(connections, connection)
-	}
-	if connection := matrix.getConnection(NORTH, i+1, j); connection != nil {
-		connections = append(connections, connection)
-	}
+
+	/*
+		if connection := matrix.getConnection(EAST, i, j-1); connection != nil {
+			// connections = append(connections, connection)
+			connections = append(connections, []int{i, j - 1})
+		}
+		if connection := matrix.getConnection(SOUTH, i-1, j); connection != nil {
+			// connections = append(connections, connection)
+			connections = append(connections, []int{i - 1, j})
+		}
+		if connection := matrix.getConnection(WEST, i, j+1); connection != nil {
+			// connections = append(connections, connection)
+			connections = append(connections, []int{i, j + 1})
+		}
+		if connection := matrix.getConnection(NORTH, i+1, j); connection != nil {
+			// connections = append(connections, connection)
+			connections = append(connections, []int{i + 1, j})
+		}
+	*/
 
 	return connections
 }
 
+/*
 func (matrix *Matrix) getNextConnection(lookFrom, before []int) []int {
 	allConnections := util.Filter(matrix.getAllConnections(lookFrom[0], lookFrom[1]), func(connection []int) bool {
 		return connection[0] != before[0] || connection[1] != before[1]
 	})
 
-	if len(allConnections) == 1 {
+	if len(allConnections) > 0 {
 		return allConnections[0]
 	}
 
 	return nil
 }
+*/
 
 func part01(lines []string) int {
-	result := 0
-
 	matrix := NewMatrix(lines)
-	dump.P("starting at", matrix.start)
-	// lengths := make([]int, 2)
+	length := 2
 
 	startConnections := matrix.getAllConnections(matrix.start[0], matrix.start[1])
-	dump.P("startConnections are", startConnections)
 
-	nextRight := matrix.getNextConnection(startConnections[0], matrix.start)
-	dump.P("nextRight is", nextRight)
-	nextRight = matrix.getNextConnection(nextRight, startConnections[0])
-	dump.P("nextRight is", nextRight)
+	fmt.Printf("start at %v has connections %v\n", matrix.start, startConnections)
 
+	visited := [][]int{matrix.start}
 	/*
-		checkRight := matrix.getRightLength(startConnections[0])
 
-		dump.P(checkRight)
+			ignore := matrix.start
+			previous := startConnections[0]
+			visited = append(visited, ignore)
+			visited = append(visited, previous)
+
+			nextRight := matrix.getNextConnection(previous, ignore)
+
+			for nextRight != nil && matrix.data[nextRight[0]][nextRight[1]] != "S" {
+				fmt.Printf("%v => %v \"%v\" (length %d)\n", previous, nextRight, matrix.data[nextRight[0]][nextRight[1]], length)
+				if slices.ContainsFunc(visited, func(val []int) bool {
+					return val[0] == nextRight[0] && val[1] == nextRight[1]
+				}) {
+					fmt.Println("  already visited!")
+					nextRight = nil
+					continue
+				}
+				visited = append(visited, nextRight)
+				length += 2
+
+				ignore = previous
+				previous = nextRight
+
+				nextRight = matrix.getNextConnection(previous, ignore)
+
+			}
+
+		if nextRight != nil {
+			length += 2
+		}
 	*/
-	return result
+
+	dump.P(visited)
+
+	// create file
+	f, err := os.Create("output.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// remember to close the file
+	defer f.Close()
+
+	for i, line := range lines {
+		val := strings.Repeat("_", len(line))
+		for j := 0; j < len(line); j++ {
+			if slices.ContainsFunc(visited, func(pos []int) bool {
+				return pos[0] == i && pos[1] == j
+			}) {
+				left := ""
+				if j > 0 {
+					left = val[:j]
+				}
+				val = left + "X" + val[j+1:]
+			}
+		}
+		_, err := f.WriteString(val + "\n")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	return int(math.Floor(float64(length) / 2.0))
 }
 
 func part02(lines []string) int {
