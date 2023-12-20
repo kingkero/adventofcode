@@ -39,59 +39,57 @@ type Pair struct {
 
 type GalaxyImage struct {
 	originalFields [][]string
-	expandRows     []int
-	expandCols     []int
 	galaxies       []*Point
+	emptyRows      []int
+	emptyCols      []int
 }
 
 func NewGalaxyImage(lines []string) *GalaxyImage {
-	var expandRows, expandCols []int
 	var galaxies []*Point
+	var emptyRows, emptyCols []int
 
 	originalFields := make([][]string, len(lines))
 	for row := 0; row < len(lines); row++ {
 		originalFields[row] = strings.Split(lines[row], "")
-
 		if isRowEmpty(originalFields[row]) {
-			expandRows = append(expandRows, row+len(expandRows))
+			emptyRows = append(emptyRows, row)
 		}
 	}
 
-	for col := 0; col < len(originalFields[0]); col++ {
-		if isColEmpty(originalFields, col) {
-			expandCols = append(expandCols, col+len(expandCols))
-		}
-	}
-
-	newRows := len(lines) + len(expandRows)
-	newCols := len(lines[0]) + len(expandCols)
-
-	referenceRow := 0
-	for row := 0; row < newRows; row++ {
-		referenceCol := 0
-		for col := 0; col < newCols; col++ {
-			if originalFields[referenceRow][referenceCol] == "#" {
+	for row := 0; row < len(originalFields); row++ {
+		for col := 0; col < len(originalFields[0]); col++ {
+			if isColEmpty(originalFields, col) {
+				emptyCols = append(emptyCols, col)
+			}
+			if originalFields[row][col] == "#" {
 				galaxies = append(galaxies, &Point{row, col})
 			}
-			referenceCol++
-
-			if slices.Contains(expandCols, col) {
-				col++
-			}
-		}
-		referenceRow++
-
-		if slices.Contains(expandRows, row) {
-			row++
 		}
 	}
 
-	return &GalaxyImage{originalFields, expandRows, expandCols, galaxies}
+	return &GalaxyImage{originalFields, galaxies, emptyRows, emptyCols}
 }
 
 func (image GalaxyImage) getDistance(a, b *Point, factor int) int {
-	diffRow := int(math.Abs(float64(image.galaxies[j].row - a.row)))
-	diffCol := int(math.Abs(float64(image.galaxies[j].col - a.col)))
+	startRow := int(math.Min(float64(a.row), float64(b.row)))
+	diffRow := int(math.Abs(float64(b.row - a.row)))
+	maxDiffRow := diffRow
+
+	startCol := int(math.Min(float64(a.col), float64(b.col)))
+	diffCol := int(math.Abs(float64(b.col - a.col)))
+	maxDiffCol := diffCol
+
+	for i := 1; i < maxDiffRow; i++ {
+		if slices.Contains(image.emptyRows, startRow+i) {
+			diffRow += factor
+		}
+	}
+
+	for i := 1; i < maxDiffCol; i++ {
+		if slices.Contains(image.emptyCols, startCol+i) {
+			diffCol += factor
+		}
+	}
 
 	if diffRow == 0 {
 		return diffCol
@@ -119,7 +117,7 @@ func part01(image *GalaxyImage) int {
 }
 
 func part02(image *GalaxyImage) int {
-	return image.getTotalDistances(10)
+	return image.getTotalDistances(100)
 }
 
 func Solve(input string) (int, int) {
