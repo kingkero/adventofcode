@@ -5,9 +5,11 @@ import (
 	"log"
 	"math"
 	"os"
+	"regexp"
 	"slices"
 	"strings"
 
+	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -167,6 +169,12 @@ func part01(matrix *Matrix) int {
 		length++
 	}
 
+	return int(math.Floor(float64(length) / 2.0))
+}
+
+func part02(matrix *Matrix) int {
+	result := 0
+
 	// create file
 	f, err := os.Create("output.txt")
 	if err != nil {
@@ -192,13 +200,13 @@ func part01(matrix *Matrix) int {
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		dump.P(val)
+
+		r1 := regexp.MustCompile("X+")
+
+		dump.P(r1.Split(val, -1))
 	}
-
-	return int(math.Floor(float64(length) / 2.0))
-}
-
-func part02(matrix *Matrix) int {
-	result := 0
 
 	return result
 }
