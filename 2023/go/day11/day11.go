@@ -58,8 +58,10 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 
 	for row := 0; row < len(originalFields); row++ {
 		for col := 0; col < len(originalFields[0]); col++ {
-			if isColEmpty(originalFields, col) {
-				emptyCols = append(emptyCols, col)
+			if row == 0 {
+				if isColEmpty(originalFields, col) {
+					emptyCols = append(emptyCols, col)
+				}
 			}
 			if originalFields[row][col] == "#" {
 				galaxies = append(galaxies, &Point{row, col})
@@ -117,7 +119,7 @@ func part01(image *GalaxyImage) int {
 }
 
 func part02(image *GalaxyImage) int {
-	return image.getTotalDistances(100)
+	return image.getTotalDistances(10)
 }
 
 func Solve(input string) (int, int) {
