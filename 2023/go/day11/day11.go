@@ -1,11 +1,11 @@
 package day11
 
 import (
+	"fmt"
 	"log"
 	"slices"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -27,14 +27,24 @@ func isColEmpty(fields [][]string, col int) bool {
 	return true
 }
 
+type Point struct {
+	row int
+	col int
+}
+
+type Pair struct {
+	a *Point
+	b *Point
+}
+
 type GalaxyImage struct {
 	expandedFields [][]string
-	galaxies       [][]int
+	galaxies       []*Point
 }
 
 func NewGalaxyImage(lines []string) *GalaxyImage {
 	var expandRows, expandCols []int
-	var galaxies [][]int
+	var galaxies []*Point
 
 	fields := make([][]string, len(lines))
 	for row := 0; row < len(lines); row++ {
@@ -62,7 +72,7 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 		referenceCol := 0
 		for col := 0; col < newCols; col++ {
 			if fields[referenceRow][referenceCol] == "#" {
-				galaxies = append(galaxies, []int{row, col})
+				galaxies = append(galaxies, &Point{row, col})
 			}
 			newRow[col] = fields[referenceRow][referenceCol]
 			referenceCol++
@@ -88,7 +98,14 @@ func part01(lines []string) int {
 	result := 0
 
 	image := NewGalaxyImage(lines)
-	dump.P(image.galaxies)
+
+	var pairs []*Pair
+	for i, a := range image.galaxies {
+		for j := i + 1; j < len(image.galaxies); j++ {
+			pairs = append(pairs, &Pair{a, image.galaxies[j]})
+			fmt.Printf("%v and %v\n", a, image.galaxies[j])
+		}
+	}
 
 	return result
 }
