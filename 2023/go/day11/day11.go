@@ -1,8 +1,8 @@
 package day11
 
 import (
-	"fmt"
 	"log"
+	"math"
 	"slices"
 	"strings"
 
@@ -95,19 +95,25 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 }
 
 func part01(lines []string) int {
-	result := 0
-
 	image := NewGalaxyImage(lines)
+	distances := 0
 
-	var pairs []*Pair
 	for i, a := range image.galaxies {
 		for j := i + 1; j < len(image.galaxies); j++ {
-			pairs = append(pairs, &Pair{a, image.galaxies[j]})
-			fmt.Printf("%v and %v\n", a, image.galaxies[j])
+			diffRow := int(math.Abs(float64(image.galaxies[j].row - a.row)))
+			diffCol := int(math.Abs(float64(image.galaxies[j].col - a.col)))
+
+			if diffRow == 0 {
+				distances += diffCol
+			} else if diffCol == 0 {
+				distances += diffRow
+			} else {
+				distances += diffCol + diffRow
+			}
 		}
 	}
 
-	return result
+	return distances
 }
 
 func part02(lines []string) int {
