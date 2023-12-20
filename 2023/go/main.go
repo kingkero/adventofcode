@@ -17,6 +17,7 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/day08"
 	"github.com/kingkero/adventofcode/2023/go/day09"
 	"github.com/kingkero/adventofcode/2023/go/day10"
+	"github.com/kingkero/adventofcode/2023/go/day11"
 )
 
 func getValueWithLeadingZeroes(value int) string {
@@ -40,8 +41,6 @@ func writeSolvers(writer *tabwriter.Writer, solvers ...Solver) {
 		p01, p02 = solvers[i]("./" + name + "/input.txt")
 		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", i+1, p01, p02, time.Since(previous))
 		previous = time.Now()
-
-		writer.Flush()
 	}
 }
 
@@ -60,5 +59,8 @@ func main() {
 		day08.Solve,
 		day09.Solve,
 		day10.Solve,
+		day11.Solve,
 	)
+
+	writer.Flush()
 }
