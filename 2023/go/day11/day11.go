@@ -89,21 +89,25 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 	return &GalaxyImage{originalFields, expandRows, expandCols, galaxies}
 }
 
+func GetDistance(a, b Point) int {
+	diffRow := int(math.Abs(float64(b.row - a.row)))
+	diffCol := int(math.Abs(float64(b.col - a.col)))
+
+	if diffRow == 0 {
+		return diffCol
+	}
+	if diffCol == 0 {
+		return diffRow
+	}
+	return diffCol + diffRow
+}
+
 func part01(image *GalaxyImage) int {
 	distances := 0
 
 	for i, a := range image.galaxies {
 		for j := i + 1; j < len(image.galaxies); j++ {
-			diffRow := int(math.Abs(float64(image.galaxies[j].row - a.row)))
-			diffCol := int(math.Abs(float64(image.galaxies[j].col - a.col)))
-
-			if diffRow == 0 {
-				distances += diffCol
-			} else if diffCol == 0 {
-				distances += diffRow
-			} else {
-				distances += diffCol + diffRow
-			}
+			distances += GetDistance(*a, *image.galaxies[j])
 		}
 	}
 
