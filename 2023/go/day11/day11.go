@@ -32,11 +32,6 @@ type Point struct {
 	col int
 }
 
-type Pair struct {
-	a *Point
-	b *Point
-}
-
 type GalaxyImage struct {
 	originalFields [][]string
 	expandRows     []int
