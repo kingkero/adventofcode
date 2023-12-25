@@ -18,6 +18,7 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/day09"
 	"github.com/kingkero/adventofcode/2023/go/day10"
 	"github.com/kingkero/adventofcode/2023/go/day11"
+	"github.com/kingkero/adventofcode/2023/go/day12"
 )
 
 func getValueWithLeadingZeroes(value int) string {
@@ -60,6 +61,7 @@ func main() {
 		day09.Solve,
 		day10.Solve,
 		day11.Solve,
+		day12.Solve,
 	)
 
 	writer.Flush()
