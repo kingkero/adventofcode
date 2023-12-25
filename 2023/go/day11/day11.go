@@ -80,7 +80,7 @@ func (image *GalaxyImage) getTotalGalaxiesDistance(expand int) int {
 		expandCols := 0
 		for col := 0; col < len(image.originalFields[row]); col++ {
 			if image.originalFields[row][col] == "#" {
-				galaxies = append(galaxies, &Point{row + expandRows, col + expandCols})
+				galaxies = append(galaxies, &Point{row + (expandRows * expand), col + (expandCols * expand)})
 			}
 
 			if slices.Contains(image.expandCols, col) {
@@ -108,7 +108,7 @@ func part01(image *GalaxyImage) int {
 }
 
 func part02(image *GalaxyImage) int {
-	return image.getTotalGalaxiesDistance(9)
+	return image.getTotalGalaxiesDistance(999_999)
 }
 
 func Solve(input string) (int, int) {
