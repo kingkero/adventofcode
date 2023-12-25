@@ -46,13 +46,13 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 		originalFields[row] = strings.Split(lines[row], "")
 
 		if isRowEmpty(originalFields[row]) {
-			expandRows = append(expandRows, row+len(expandRows))
+			expandRows = append(expandRows, row)
 		}
 	}
 
 	for col := 0; col < len(originalFields[0]); col++ {
 		if isColEmpty(originalFields, col) {
-			expandCols = append(expandCols, col+len(expandCols))
+			expandCols = append(expandCols, col)
 		}
 	}
 
@@ -73,27 +73,22 @@ func (image *GalaxyImage) getDistance(a, b *Point) int {
 }
 
 func (image *GalaxyImage) getTotalGalaxiesDistance(expand int) int {
-	newRows := len(image.originalFields) + len(image.expandRows)
-	newCols := len(image.originalFields[0]) + len(image.expandCols)
 	var galaxies []*Point
 
-	referenceRow := 0
-	for row := 0; row < newRows; row++ {
-		referenceCol := 0
-		for col := 0; col < newCols; col++ {
-			if image.originalFields[referenceRow][referenceCol] == "#" {
-				galaxies = append(galaxies, &Point{row, col})
+	expandRows := 0
+	for row := 0; row < len(image.originalFields); row++ {
+		expandCols := 0
+		for col := 0; col < len(image.originalFields[row]); col++ {
+			if image.originalFields[row][col] == "#" {
+				galaxies = append(galaxies, &Point{row + expandRows, col + expandCols})
 			}
-			referenceCol++
 
 			if slices.Contains(image.expandCols, col) {
-				col++
+				expandCols++
 			}
 		}
-		referenceRow++
-
 		if slices.Contains(image.expandRows, row) {
-			row++
+			expandRows++
 		}
 	}
 
