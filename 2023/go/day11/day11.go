@@ -41,12 +41,10 @@ type GalaxyImage struct {
 	originalFields [][]string
 	expandRows     []int
 	expandCols     []int
-	galaxies       []*Point
 }
 
 func NewGalaxyImage(lines []string) *GalaxyImage {
 	var expandRows, expandCols []int
-	var galaxies []*Point
 
 	originalFields := make([][]string, len(lines))
 	for row := 0; row < len(lines); row++ {
@@ -63,33 +61,10 @@ func NewGalaxyImage(lines []string) *GalaxyImage {
 		}
 	}
 
-	newRows := len(lines) + len(expandRows)
-	newCols := len(lines[0]) + len(expandCols)
-
-	referenceRow := 0
-	for row := 0; row < newRows; row++ {
-		referenceCol := 0
-		for col := 0; col < newCols; col++ {
-			if originalFields[referenceRow][referenceCol] == "#" {
-				galaxies = append(galaxies, &Point{row, col})
-			}
-			referenceCol++
-
-			if slices.Contains(expandCols, col) {
-				col++
-			}
-		}
-		referenceRow++
-
-		if slices.Contains(expandRows, row) {
-			row++
-		}
-	}
-
-	return &GalaxyImage{originalFields, expandRows, expandCols, galaxies}
+	return &GalaxyImage{originalFields, expandRows, expandCols}
 }
 
-func GetDistance(a, b Point) int {
+func (image *GalaxyImage) getDistance(a, b *Point) int {
 	diffRow := int(math.Abs(float64(b.row - a.row)))
 	diffCol := int(math.Abs(float64(b.col - a.col)))
 
@@ -102,22 +77,48 @@ func GetDistance(a, b Point) int {
 	return diffCol + diffRow
 }
 
-func part01(image *GalaxyImage) int {
+func (image *GalaxyImage) getTotalGalaxiesDistance(expand int) int {
+	newRows := len(image.originalFields) + len(image.expandRows)
+	newCols := len(image.originalFields[0]) + len(image.expandCols)
+	var galaxies []*Point
+
+	referenceRow := 0
+	for row := 0; row < newRows; row++ {
+		referenceCol := 0
+		for col := 0; col < newCols; col++ {
+			if image.originalFields[referenceRow][referenceCol] == "#" {
+				galaxies = append(galaxies, &Point{row, col})
+			}
+			referenceCol++
+
+			if slices.Contains(image.expandCols, col) {
+				col++
+			}
+		}
+		referenceRow++
+
+		if slices.Contains(image.expandRows, row) {
+			row++
+		}
+	}
+
 	distances := 0
 
-	for i, a := range image.galaxies {
-		for j := i + 1; j < len(image.galaxies); j++ {
-			distances += GetDistance(*a, *image.galaxies[j])
+	for i, a := range galaxies {
+		for j := i + 1; j < len(galaxies); j++ {
+			distances += image.getDistance(a, galaxies[j])
 		}
 	}
 
 	return distances
 }
 
-func part02(image *GalaxyImage) int {
-	result := 0
+func part01(image *GalaxyImage) int {
+	return image.getTotalGalaxiesDistance(1)
+}
 
-	return result
+func part02(image *GalaxyImage) int {
+	return image.getTotalGalaxiesDistance(9)
 }
 
 func Solve(input string) (int, int) {
