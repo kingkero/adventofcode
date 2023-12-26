@@ -32,15 +32,6 @@ func ReadFile(input string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-// Get the sum of all ints in an array.
-func SumInts(values []int) int {
-	result := 0
-	for _, val := range values {
-		result += val
-	}
-	return result
-}
-
 func Map[T, U any](ts []T, f func(T) U) []U {
 	us := make([]U, len(ts))
 	for i := range ts {
