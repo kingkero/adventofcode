@@ -1,6 +1,7 @@
 package day12
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -62,9 +63,57 @@ func (record *Record) canFitGroups(col, group int) bool {
 	return record.canFitGroups(col+expandCol+1, group+1)
 }
 
-func (record *Record) getTotalCombinations() int {
-	combinations := 1
+func onlyUndamagedSprings(springs []string) bool {
+	for _, spring := range springs {
+		if spring == "#" {
+			return false
+		}
+	}
+	return true
+}
 
+func (record *Record) getCombinationsStartingAt(startCol, groupIndex int) int {
+	combinations := -1
+
+	remainingGroups := record.damagedGroups[groupIndex:]
+	remainingSprings := record.springs[startCol:]
+	// fmt.Printf("\tlook at %v for %d groups\n", strings.Join(remainingSprings, ""), len(remainingGroups))
+
+	// last group
+	if len(remainingGroups) == 1 {
+		// assume last group starts at startCol
+		groupLength := remainingGroups[0]
+		if onlyUndamagedSprings(remainingSprings[groupLength:]) {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	return combinations
+}
+
+func (record *Record) getTotalCombinations() int {
+	combinations := 0
+
+	// fmt.Println()
+	// fmt.Println(strings.Join(record.springs, ""))
+
+	minLength := util.Sum(record.damagedGroups) + len(record.damagedGroups) - 1
+	for start := 0; start <= len(record.springs)-minLength; start++ {
+		result := record.getCombinationsStartingAt(start, 0)
+		// fmt.Printf("\tgot %d\n", result)
+		// fmt.Println()
+		combinations += result
+		// combinations += record.getCombinationsStartingAt(start, 0)
+
+		// MUST start here
+		if record.springs[start] == "#" {
+			return combinations
+		}
+	}
+
+	fmt.Println()
 	return combinations
 }
 
