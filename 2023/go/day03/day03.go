@@ -64,7 +64,7 @@ func part01(lines []string) int {
 			nextLine = lines[i+1]
 		}
 		importantLineNumbers := checkLine(prevLine, line, nextLine)
-		result += util.SumInts(importantLineNumbers)
+		result += util.Sum(importantLineNumbers)
 
 		prevLine = line
 	}
