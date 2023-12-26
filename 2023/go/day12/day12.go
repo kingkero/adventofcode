@@ -1,11 +1,8 @@
 package day12
 
 import (
-	"fmt"
 	"log"
-	"os"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
@@ -71,20 +68,14 @@ func (record *Record) getTotalCombinations() int {
 	return combinations
 }
 
-func getPossibleCombinations(records []*Record, writer *tabwriter.Writer) int {
+func getPossibleCombinations(records []*Record) int {
 	return util.Sum(util.Map(records, func(record *Record) int {
-		tmp := record.getTotalCombinations()
-		fmt.Fprintf(writer, "%v\t\t%d\n", strings.Join(record.springs, ""), tmp)
-		return tmp
-		// return record.getTotalCombinations()
+		return record.getTotalCombinations()
 	}))
 }
 
 func part01(records []*Record) int {
-	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
-	result := getPossibleCombinations(records, writer)
-	writer.Flush()
-	return result
+	return getPossibleCombinations(records)
 }
 
 func part02() int {
