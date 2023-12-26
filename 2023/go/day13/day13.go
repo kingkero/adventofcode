@@ -24,9 +24,10 @@ func ParseMatrixes(lines []string) []*Matrix {
 	var matrixes []*Matrix
 
 	startIndex := 0
+
 	for i, line := range lines {
 		if line == "" {
-			matrixes = append(matrixes, NewMatrix(lines[startIndex:(i-startIndex)]))
+			matrixes = append(matrixes, NewMatrix(lines[startIndex:i-1]))
 			startIndex = i + 1
 		}
 	}
