@@ -101,13 +101,13 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 func part01(matrixes []*Matrix) int {
 	result := 0
 	for _, matrix := range matrixes {
-		if horizontalMirror := matrix.getLeftMirrorCol(); horizontalMirror > 0 {
-			result += horizontalMirror + 1
+		if mirror := matrix.getLeftMirrorCol(); mirror > 0 {
+			result += mirror + 1
 			continue
 		}
 
-		if verticalMirror := matrix.rotate().getLeftMirrorCol(); verticalMirror > 0 {
-			result += (verticalMirror + 1) * 100
+		if mirror := matrix.rotate().getLeftMirrorCol(); mirror > 0 {
+			result += (mirror + 1) * 100
 		}
 	}
 	return result
