@@ -123,6 +123,8 @@ func getPossibleCombinations(records []*Record) int {
 }
 
 func part01(records []*Record) int {
+	return 0
+	// TODO: rest is still WIP
 	return getPossibleCombinations(records)
 }
 
