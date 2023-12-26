@@ -73,11 +73,9 @@ func onlyUndamagedSprings(springs []string) bool {
 }
 
 func (record *Record) getCombinationsStartingAt(startCol, groupIndex int) int {
-	combinations := -1
-
 	remainingGroups := record.damagedGroups[groupIndex:]
 	remainingSprings := record.springs[startCol:]
-	// fmt.Printf("\tlook at %v for %d groups\n", strings.Join(remainingSprings, ""), len(remainingGroups))
+	fmt.Printf("\tlook at %v for %d groups\n", strings.Join(remainingSprings, ""), len(remainingGroups))
 
 	// last group
 	if len(remainingGroups) == 1 {
@@ -90,20 +88,22 @@ func (record *Record) getCombinationsStartingAt(startCol, groupIndex int) int {
 		}
 	}
 
-	return combinations
+	// asume second-to-last groups starts at startCol
+	groupLength := remainingGroups[0]
+	return record.getCombinationsStartingAt(startCol+groupLength+1, groupIndex+1)
 }
 
 func (record *Record) getTotalCombinations() int {
 	combinations := 0
 
-	// fmt.Println()
-	// fmt.Println(strings.Join(record.springs, ""))
+	fmt.Println()
+	fmt.Println(strings.Join(record.springs, ""))
 
 	minLength := util.Sum(record.damagedGroups) + len(record.damagedGroups) - 1
 	for start := 0; start <= len(record.springs)-minLength; start++ {
 		result := record.getCombinationsStartingAt(start, 0)
-		// fmt.Printf("\tgot %d\n", result)
-		// fmt.Println()
+		fmt.Printf("\tgot %d\n", result)
+		fmt.Println()
 		combinations += result
 		// combinations += record.getCombinationsStartingAt(start, 0)
 
