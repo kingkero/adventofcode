@@ -18,7 +18,7 @@ func getRecords(lines []string) []*Record {
 	for _, line := range lines {
 		parts := strings.Split(line, " ")
 		result = append(result, &Record{
-			strings.Split(parts[0], ""),
+			strings.Split(strings.Trim(parts[0], "."), ""),
 			util.Map(strings.Split(parts[1], ","), util.ParseInt),
 		})
 	}
