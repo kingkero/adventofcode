@@ -2,7 +2,7 @@ package day11
 
 import "testing"
 
-func TestSolutionDay09(t *testing.T) {
+func TestSolutionDay11(t *testing.T) {
 	solution01, solution02 := 10231178, 622120986954
 	part01, part02 := Solve("./input.txt")
 
