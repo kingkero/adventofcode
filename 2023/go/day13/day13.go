@@ -70,11 +70,9 @@ func canMirrorColAt(col int, row []string) bool {
 }
 
 func (matrix *Matrix) getLeftMirrorCol() int {
-	// 0 cannot be a left mirror
-	// width and width - 1 cannot be left mirrors
-	possibles := make([]int, matrix.width-3)
+	possibles := make([]int, matrix.width-1)
 	for i := range possibles {
-		possibles[i] = i + 1
+		possibles[i] = i
 	}
 
 	for _, row := range matrix.data {
@@ -86,8 +84,9 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 		}
 
 		if len(newPossibles) == 0 {
-			return 0
+			return -1
 		}
+
 		possibles = newPossibles
 	}
 
@@ -95,18 +94,18 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 		return possibles[0]
 	}
 
-	return 0
+	return -1
 }
 
 func part01(matrixes []*Matrix) int {
 	result := 0
 	for _, matrix := range matrixes {
-		if mirror := matrix.getLeftMirrorCol(); mirror > 0 {
+		if mirror := matrix.getLeftMirrorCol(); mirror != -1 {
 			result += mirror + 1
 			continue
 		}
 
-		if mirror := matrix.rotate().getLeftMirrorCol(); mirror > 0 {
+		if mirror := matrix.rotate().getLeftMirrorCol(); mirror != -1 {
 			result += (mirror + 1) * 100
 		}
 	}
