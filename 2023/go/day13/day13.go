@@ -3,6 +3,7 @@ package day13
 import (
 	"log"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -57,17 +58,21 @@ func (original Matrix) rotate() *Matrix {
 func canMirrorColAt(col int, row []string) bool {
 	length := col + 1
 	half := int(math.Floor(float64(len(row)) / 2.0))
-	if col >= half {
+	var left []string
+
+	if col < half {
+		left = row[:length]
+	} else {
 		length = len(row) - 1 - col
+		left = row[col-length+1 : col+1]
 	}
+	right := row[col+1 : col+1+length]
 
-	for i := 0; i < length; i++ {
-		if row[col-i] != row[col+i+1] {
-			return false
-		}
-	}
+	rightCopy := make([]string, len(right))
+	copy(rightCopy, right)
+	slices.Reverse(rightCopy)
 
-	return true
+	return strings.Join(left, "") == strings.Join(rightCopy, "")
 }
 
 func (matrix *Matrix) getLeftMirrorCol() int {
