@@ -1,9 +1,9 @@
 package day13
 
 import (
-	"fmt"
 	"log"
 	"math"
+	"strconv"
 	"strings"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
@@ -28,7 +28,7 @@ func ParseMatrixes(lines []string) []*Matrix {
 
 	for i, line := range lines {
 		if line == "" {
-			matrixes = append(matrixes, NewMatrix(lines[startIndex:i-1]))
+			matrixes = append(matrixes, NewMatrix(lines[startIndex:i]))
 			startIndex = i + 1
 		}
 	}
@@ -91,8 +91,7 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 		possibles = newPossibles
 	}
 
-	// TODO: for multiple possibilities, which should be chosen?
-	if len(possibles) > 0 {
+	if len(possibles) == 1 {
 		return possibles[0]
 	}
 
@@ -107,11 +106,7 @@ func part01(matrixes []*Matrix) int {
 		} else if mirror := matrix.rotate().getLeftMirrorCol(); mirror != -1 {
 			result += (mirror + 1) * 100
 		} else {
-			fmt.Printf("no mirror found for matrix %d\n", i)
-			for _, row := range matrix.data {
-				fmt.Println(strings.Join(row, ""))
-			}
-			fmt.Println()
+			panic("no reflection found for matrix " + strconv.Itoa(i))
 		}
 	}
 	return result
