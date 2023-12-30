@@ -23,3 +23,23 @@ func TestParseInt(t *testing.T) {
 		}
 	}
 }
+
+func TestHammingDistance(t *testing.T) {
+	cases := [][]string{
+		{"foo", "foo"},
+		{"foo", "bar"},
+		{"bar", "baz"},
+	}
+	expectedResults := []int{
+		0,
+		3,
+		1,
+	}
+
+	for i, test := range cases {
+		result := Hamming(test[0], test[1])
+		if result != expectedResults[i] {
+			t.Fatalf("Expected distance between %v and %v to be %d, got %d instead", test[0], test[1], expectedResults[i], result)
+		}
+	}
+}
