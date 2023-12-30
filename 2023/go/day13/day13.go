@@ -1,6 +1,7 @@
 package day13
 
 import (
+	"fmt"
 	"log"
 	"math"
 	"strings"
@@ -90,7 +91,8 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 		possibles = newPossibles
 	}
 
-	if len(possibles) == 1 {
+	// TODO: for multiple possibilities, which should be chosen?
+	if len(possibles) > 0 {
 		return possibles[0]
 	}
 
@@ -99,14 +101,17 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 
 func part01(matrixes []*Matrix) int {
 	result := 0
-	for _, matrix := range matrixes {
+	for i, matrix := range matrixes {
 		if mirror := matrix.getLeftMirrorCol(); mirror != -1 {
 			result += mirror + 1
-			continue
-		}
-
-		if mirror := matrix.rotate().getLeftMirrorCol(); mirror != -1 {
+		} else if mirror := matrix.rotate().getLeftMirrorCol(); mirror != -1 {
 			result += (mirror + 1) * 100
+		} else {
+			fmt.Printf("no mirror found for matrix %d\n", i)
+			for _, row := range matrix.data {
+				fmt.Println(strings.Join(row, ""))
+			}
+			fmt.Println()
 		}
 	}
 	return result
