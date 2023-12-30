@@ -65,3 +65,17 @@ func ParseInt(value string) int {
 	}
 	return int(val)
 }
+
+func Hamming(a, b string) int {
+	if len(a) != len(b) {
+		return -1
+	}
+
+	distance := 0
+	for i := range a {
+		if a[i] != b[i] {
+			distance++
+		}
+	}
+	return distance
+}
