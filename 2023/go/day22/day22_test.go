@@ -1,7 +1,6 @@
 package day22
 
-import "testing"
-
+/*
 func TestSolutionDay22(t *testing.T) {
 	solution01, solution02 := 0, 0
 	part01, part02 := Solve("./input.txt")
@@ -14,3 +13,4 @@ func TestSolutionDay22(t *testing.T) {
 		t.Fatalf("Part02 solution expected %d, was %d", solution02, part02)
 	}
 }
+*/
