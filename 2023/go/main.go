@@ -48,7 +48,7 @@ func getValueWithLeadingZeroes(value int) string {
 
 type Solver func(file string) (int, int)
 
-func writeSolvers(writer *tabwriter.Writer, solvers map[int]Solver) {
+func writeSolvers(writer *tabwriter.Writer, solvers map[int]Solver, useDemoData bool) {
 	days := util.GetMapKeys(solvers)
 	slices.Sort(days)
 	slices.Reverse(days)
@@ -57,8 +57,12 @@ func writeSolvers(writer *tabwriter.Writer, solvers map[int]Solver) {
 	p01, p02 := 0, 0
 	for _, day := range days {
 		name := "day" + getValueWithLeadingZeroes(day)
+		input := "input.txt"
+		if useDemoData {
+			input = "input_demo.txt"
+		}
 
-		p01, p02 = solvers[day]("./" + name + "/input.txt")
+		p01, p02 = solvers[day]("./" + name + "/" + input)
 		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", day, p01, p02, time.Since(previous))
 		previous = time.Now()
 	}
@@ -96,6 +100,7 @@ func main() {
 	}
 
 	day := flag.Int("day", -1, "which day to run")
+	useDemoData := flag.Bool("demo", false, "to use demo data")
 	flag.Parse()
 
 	if *day > 0 {
@@ -107,6 +112,7 @@ func main() {
 	writeSolvers(
 		writer,
 		solvers,
+		*useDemoData,
 	)
 
 	writer.Flush()
