@@ -82,6 +82,15 @@ func canMirrorColAt(col int, row []string, smudge bool) bool {
 	return util.Hamming(leftString, rightString) < 2
 }
 
+func getRowWithMissingReflectorCol(possiblesPerRow [][]int, col int) int {
+	for i, possibles := range possiblesPerRow {
+		if !slices.Contains(possibles, col) {
+			return i
+		}
+	}
+	return -1
+}
+
 func (matrix *Matrix) getLeftMirrorCol(smudge bool) int {
 	// part 1:
 	if !smudge {
@@ -112,32 +121,32 @@ func (matrix *Matrix) getLeftMirrorCol(smudge bool) int {
 		return -1
 	}
 
-	// TODO:
-	// to calculate part 2, get all possibles without smudge
-	// one row will have one less possible -> check if with smudge it has the same possible
-	// if so -> this will be the new reflection col
-	possibles := make([]int, matrix.width-1)
-	for i := range possibles {
-		possibles[i] = i
-	}
-
-	for _, row := range matrix.data {
+	// get all possible reflections per row
+	possiblesPerRow := make([][]int, len(matrix.data))
+	for i, row := range matrix.data {
 		var newPossibles []int
-		for _, possibleCol := range possibles {
-			if canMirrorColAt(possibleCol, row, smudge) {
+		for possibleCol := 0; possibleCol < matrix.width-1; possibleCol++ {
+			if canMirrorColAt(possibleCol, row, false) {
 				newPossibles = append(newPossibles, possibleCol)
 			}
 		}
-
-		if len(newPossibles) == 0 {
-			return -1
-		}
-
-		possibles = newPossibles
+		possiblesPerRow[i] = newPossibles
 	}
 
-	if len(possibles) >= 1 {
-		return possibles[0]
+	// get map col => amount of occurrences
+	// if we see it matrix.height times, it is already a solution
+	// if we see it matrix.height - 1 times, find the row that misses it and
+	// 		check if we can reflect with smudge correction
+	occurrences := util.SumOccurrences(possiblesPerRow)
+	for col, occurres := range occurrences {
+		if occurres == matrix.height-1 {
+			row := getRowWithMissingReflectorCol(possiblesPerRow, col)
+			if row > -1 {
+				if canMirrorColAt(col, matrix.data[row], true) {
+					return col
+				}
+			}
+		}
 	}
 
 	return -1
