@@ -86,3 +86,15 @@ func Hamming(a, b string) int {
 	}
 	return distance
 }
+
+func SumOccurrences(data [][]int) map[int]int {
+	result := make(map[int]int)
+
+	for _, list := range data {
+		for _, element := range list {
+			result[element]++
+		}
+	}
+
+	return result
+}
