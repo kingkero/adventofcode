@@ -98,3 +98,13 @@ func SumOccurrences(data [][]int) map[int]int {
 
 	return result
 }
+
+func GetMapKeys[K comparable, V any](data map[K]V) []K {
+	result := make([]K, len(data))
+	position := 0
+	for key := range data {
+		result[position] = key
+		position++
+	}
+	return result
+}
