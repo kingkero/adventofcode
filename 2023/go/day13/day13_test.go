@@ -2,15 +2,28 @@ package day13
 
 import "testing"
 
-func TestSolutionDay13(t *testing.T) {
-	solution01, solution02 := 34918, 33054
-	part01, part02 := Solve("./input.txt")
+func TestSolutionDay13DemoData(t *testing.T) {
+	expected := []int{405, 400}
 
-	if part01 != solution01 {
-		t.Fatalf("Part01 solution expected %d, was %d", solution01, part01)
+	part01, part02 := Solve("./input_demo.txt")
+	actual := []int{part01, part02}
+
+	for i, expectation := range expected {
+		if expectation != actual[i] {
+			t.Fatalf("demo data part %d expected %d, was %d", i+1, expectation, actual[i])
+		}
 	}
+}
 
-	if part02 != solution02 {
-		t.Fatalf("Part02 solution expected %d, was %d", solution02, part02)
+func TestSolutionDay13RealData(t *testing.T) {
+	expected := []int{34918, 33054}
+
+	part01, part02 := Solve("./input.txt")
+	actual := []int{part01, part02}
+
+	for i, expectation := range expected {
+		if expectation != actual[i] {
+			t.Fatalf("real data part %d expected %d, was %d", i+1, expectation, actual[i])
+		}
 	}
 }
