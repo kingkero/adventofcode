@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"text/tabwriter"
 	"time"
@@ -32,6 +33,7 @@ import (
 	"github.com/kingkero/adventofcode/2023/go/day23"
 	"github.com/kingkero/adventofcode/2023/go/day24"
 	"github.com/kingkero/adventofcode/2023/go/day25"
+	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
 func getValueWithLeadingZeroes(value int) string {
@@ -45,15 +47,18 @@ func getValueWithLeadingZeroes(value int) string {
 
 type Solver func(file string) (int, int)
 
-func writeSolvers(writer *tabwriter.Writer, solvers ...Solver) {
+func writeSolvers(writer *tabwriter.Writer, solvers map[int]Solver) {
+	days := util.GetMapKeys(solvers)
+	slices.Sort(days)
+	slices.Reverse(days)
+
 	previous := time.Now()
 	p01, p02 := 0, 0
+	for _, day := range days {
+		name := "day" + getValueWithLeadingZeroes(day)
 
-	for i := len(solvers) - 1; i >= 0; i-- {
-		name := "day" + getValueWithLeadingZeroes(i+1)
-
-		p01, p02 = solvers[i]("./" + name + "/input.txt")
-		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", i+1, p01, p02, time.Since(previous))
+		p01, p02 = solvers[day]("./" + name + "/input.txt")
+		fmt.Fprintf(writer, "Day %d:\t%v\t/\t%v\ttook %v\n", day, p01, p02, time.Since(previous))
 		previous = time.Now()
 	}
 }
@@ -61,33 +66,48 @@ func writeSolvers(writer *tabwriter.Writer, solvers ...Solver) {
 func main() {
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 
+	solvers := map[int]Solver{
+		1:  day01.Solve,
+		2:  day02.Solve,
+		3:  day03.Solve,
+		4:  day04.Solve,
+		5:  day05.Solve,
+		6:  day06.Solve,
+		7:  day07.Solve,
+		8:  day08.Solve,
+		9:  day09.Solve,
+		10: day10.Solve,
+		11: day11.Solve,
+		12: day12.Solve,
+		13: day13.Solve,
+		14: day14.Solve,
+		15: day15.Solve,
+		16: day16.Solve,
+		17: day17.Solve,
+		18: day18.Solve,
+		19: day19.Solve,
+		20: day20.Solve,
+		21: day21.Solve,
+		22: day22.Solve,
+		23: day23.Solve,
+		24: day24.Solve,
+		25: day25.Solve,
+	}
+
+	// day := flag.Int("day", -1, "which day to run")
+	// flag.Parse()
+
+	/*
+		if *day > 0 {
+			var newSolvers []Solver
+			newSolvers = append(newSolvers, solvers[*day-1])
+			solvers = newSolvers
+		}
+	*/
+
 	writeSolvers(
 		writer,
-		day01.Solve,
-		day02.Solve,
-		day03.Solve,
-		day04.Solve,
-		day05.Solve,
-		day06.Solve,
-		day07.Solve,
-		day08.Solve,
-		day09.Solve,
-		day10.Solve,
-		day11.Solve,
-		day12.Solve,
-		day13.Solve,
-		day14.Solve,
-		day15.Solve,
-		day16.Solve,
-		day17.Solve,
-		day18.Solve,
-		day19.Solve,
-		day20.Solve,
-		day21.Solve,
-		day22.Solve,
-		day23.Solve,
-		day24.Solve,
-		day25.Solve,
+		solvers,
 	)
 
 	writer.Flush()
