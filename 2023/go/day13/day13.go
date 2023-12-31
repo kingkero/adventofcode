@@ -55,7 +55,7 @@ func (original Matrix) rotate() *Matrix {
 	return &Matrix{data, original.height, original.width}
 }
 
-func canMirrorColAt(col int, row []string) bool {
+func canMirrorColAt(col int, row []string, smudge bool) bool {
 	length := col + 1
 	half := int(math.Floor(float64(len(row)) / 2.0))
 	var left []string
@@ -72,10 +72,50 @@ func canMirrorColAt(col int, row []string) bool {
 	copy(rightCopy, right)
 	slices.Reverse(rightCopy)
 
-	return strings.Join(left, "") == strings.Join(rightCopy, "")
+	leftString := strings.Join(left, "")
+	rightString := strings.Join(rightCopy, "")
+
+	if !smudge {
+		return leftString == rightString
+	}
+
+	return util.Hamming(leftString, rightString) < 2
 }
 
-func (matrix *Matrix) getLeftMirrorCol() int {
+func (matrix *Matrix) getLeftMirrorCol(smudge bool) int {
+	// part 1:
+	if !smudge {
+		possibles := make([]int, matrix.width-1)
+		for i := range possibles {
+			possibles[i] = i
+		}
+
+		for _, row := range matrix.data {
+			var newPossibles []int
+			for _, possibleCol := range possibles {
+				if canMirrorColAt(possibleCol, row, false) {
+					newPossibles = append(newPossibles, possibleCol)
+				}
+			}
+
+			if len(newPossibles) == 0 {
+				return -1
+			}
+
+			possibles = newPossibles
+		}
+
+		if len(possibles) >= 1 {
+			return possibles[0]
+		}
+
+		return -1
+	}
+
+	// TODO:
+	// to calculate part 2, get all possibles without smudge
+	// one row will have one less possible -> check if with smudge it has the same possible
+	// if so -> this will be the new reflection col
 	possibles := make([]int, matrix.width-1)
 	for i := range possibles {
 		possibles[i] = i
@@ -84,7 +124,7 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 	for _, row := range matrix.data {
 		var newPossibles []int
 		for _, possibleCol := range possibles {
-			if canMirrorColAt(possibleCol, row) {
+			if canMirrorColAt(possibleCol, row, smudge) {
 				newPossibles = append(newPossibles, possibleCol)
 			}
 		}
@@ -96,7 +136,7 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 		possibles = newPossibles
 	}
 
-	if len(possibles) == 1 {
+	if len(possibles) >= 1 {
 		return possibles[0]
 	}
 
@@ -106,9 +146,9 @@ func (matrix *Matrix) getLeftMirrorCol() int {
 func part01(matrixes []*Matrix) int {
 	result := 0
 	for i, matrix := range matrixes {
-		if mirror := matrix.getLeftMirrorCol(); mirror != -1 {
+		if mirror := matrix.getLeftMirrorCol(false); mirror != -1 {
 			result += mirror + 1
-		} else if mirror := matrix.rotate().getLeftMirrorCol(); mirror != -1 {
+		} else if mirror := matrix.rotate().getLeftMirrorCol(false); mirror != -1 {
 			result += (mirror + 1) * 100
 		} else {
 			panic("no reflection found for matrix " + strconv.Itoa(i))
@@ -117,8 +157,18 @@ func part01(matrixes []*Matrix) int {
 	return result
 }
 
-func part02(lines []string) int {
-	return 0
+func part02(matrixes []*Matrix) int {
+	result := 0
+	for i, matrix := range matrixes {
+		if mirror := matrix.getLeftMirrorCol(true); mirror != -1 {
+			result += mirror + 1
+		} else if mirror := matrix.rotate().getLeftMirrorCol(true); mirror != -1 {
+			result += (mirror + 1) * 100
+		} else {
+			panic("no reflection found for matrix " + strconv.Itoa(i))
+		}
+	}
+	return result
 }
 
 func Solve(input string) (int, int) {
@@ -129,5 +179,5 @@ func Solve(input string) (int, int) {
 
 	matrixes := ParseMatrixes(lines)
 
-	return part01(matrixes), part02(lines)
+	return part01(matrixes), part02(matrixes)
 }
