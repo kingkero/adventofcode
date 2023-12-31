@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"slices"
@@ -94,16 +95,14 @@ func main() {
 		25: day25.Solve,
 	}
 
-	// day := flag.Int("day", -1, "which day to run")
-	// flag.Parse()
+	day := flag.Int("day", -1, "which day to run")
+	flag.Parse()
 
-	/*
-		if *day > 0 {
-			var newSolvers []Solver
-			newSolvers = append(newSolvers, solvers[*day-1])
-			solvers = newSolvers
-		}
-	*/
+	if *day > 0 {
+		newSolvers := make(map[int]Solver)
+		newSolvers[*day] = solvers[*day]
+		solvers = newSolvers
+	}
 
 	writeSolvers(
 		writer,
