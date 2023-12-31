@@ -32,6 +32,8 @@ func ReadFile(input string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
+// Return a list of elements, where the new element is the result of
+// running the passed function.
 func Map[T, U any](ts []T, f func(T) U) []U {
 	us := make([]U, len(ts))
 	for i := range ts {
@@ -40,6 +42,7 @@ func Map[T, U any](ts []T, f func(T) U) []U {
 	return us
 }
 
+// Filter a list, return only elements that return true for the compare method.
 func Filter[T any](ts []T, f func(T) bool) []T {
 	var result []T
 	for _, t := range ts {
@@ -50,6 +53,7 @@ func Filter[T any](ts []T, f func(T) bool) []T {
 	return result
 }
 
+// Sum a slice/array of numbers.
 func Sum[T Number](ts []T) T {
 	var sum T
 	for i := range ts {
@@ -58,14 +62,17 @@ func Sum[T Number](ts []T) T {
 	return sum
 }
 
+// Parse an integer, panic if an error happened.
 func ParseInt(value string) int {
 	val, err := strconv.ParseInt(value, 10, 64)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return int(val)
 }
 
+// Calculate Hamming distance between two strings.
+// see https://en.wikipedia.org/wiki/Hamming_distance
 func Hamming(a, b string) int {
 	if len(a) != len(b) {
 		return -1
