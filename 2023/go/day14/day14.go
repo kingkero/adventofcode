@@ -48,28 +48,43 @@ func getNextRoundedRockIndex(col []string, startIndex int) int {
 	return -1
 }
 
-func (platform *Platform) tiltNorth() {
-	cols := platform.getColumns()
+type Direction int
 
-	// similar to bubblesort, move "O" up if encoutering "."
-	for _, col := range cols {
-		for j := 0; j < len(col)-1; j++ {
-			if col[j] == "O" || col[j] == "#" {
+const (
+	North Direction = iota
+	West
+	South
+	East
+)
+
+func (platform *Platform) tilt(direction Direction) {
+	data := platform.matrix
+
+	if direction == North {
+		data = platform.getColumns()
+	}
+
+	for _, list := range data {
+		for j := 0; j < len(list)-1; j++ {
+			if list[j] == "O" || list[j] == "#" {
 				continue
 			}
 
-			if nextRoundRock := getNextRoundedRockIndex(col, j); nextRoundRock > -1 {
-				col[j] = "O"
-				col[nextRoundRock] = "."
+			if found := getNextRoundedRockIndex(list, j); found != -1 {
+				list[j] = "O"
+				list[found] = "."
 			}
 		}
 	}
 
-	for i, col := range cols {
-		for j, element := range col {
-			platform.matrix[j][i] = element
+	if direction == North {
+		for i, col := range data {
+			for j, element := range col {
+				platform.matrix[j][i] = element
+			}
 		}
 	}
+
 }
 
 func (platform *Platform) tiltWest() {
@@ -107,18 +122,18 @@ func (platform Platform) getTotalLoad() int {
 }
 
 func (platform *Platform) cycle() {
-	platform.tiltNorth()
-	fmt.Println()
-	platform.tiltWest()
-	fmt.Println()
+	// platform.tiltNorth()
+	// fmt.Println()
+	// platform.tiltWest()
+	// fmt.Println()
 	// platform.tiltSouth()
-	fmt.Println()
+	// fmt.Println()
 	// platform.tiltEast()
-	fmt.Println()
+	// fmt.Println()
 }
 
 func part01(platform Platform) int {
-	platform.tiltNorth()
+	platform.tilt(North)
 	return platform.getTotalLoad()
 }
 
