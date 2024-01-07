@@ -1,6 +1,8 @@
 package day14
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"log"
 	"slices"
 	"strings"
@@ -127,15 +129,38 @@ func (platform *Platform) cycle() {
 	platform.tilt(East)
 }
 
+func (platform *Platform) hash() string {
+	data := ""
+	for _, row := range platform.matrix {
+		data += strings.Join(row, "")
+	}
+	hash := md5.Sum([]byte(data))
+	return hex.EncodeToString(hash[:])
+}
+
 func part01(platform Platform) int {
 	platform.tilt(North)
 	return platform.getTotalLoad()
 }
 
-func part02(platform Platform) int {
-	for i := 0; i < 1; i++ {
+func part02(platform Platform, total int) int {
+	calculated := make(map[string]int)
+	for i := 0; i < total; i++ {
 		platform.cycle()
+
+		hash := platform.hash()
+
+		if cycle, found := calculated[hash]; found {
+			diff := total - i
+			cycleLength := i - cycle
+			skip := diff / cycleLength
+			i += skip * cycleLength
+			continue
+		}
+
+		calculated[hash] = i
 	}
+
 	return platform.getTotalLoad()
 }
 
@@ -147,7 +172,5 @@ func Solve(input string) (int, int) {
 
 	platform := NewPlatform(lines)
 
-	// dump.P(platform)
-
-	return part01(*platform), part02(*platform)
+	return part01(*platform), part02(*platform, 1_000_000_000)
 }
