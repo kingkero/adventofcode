@@ -3,7 +3,7 @@ package day15
 import "testing"
 
 func TestSolutionDay15DemoData(t *testing.T) {
-	expected := []int{-1, -1}
+	expected := []int{1320, 145}
 
 	part01, part02 := Solve("./input_demo.txt")
 	actual := []int{part01, part02}
@@ -16,7 +16,7 @@ func TestSolutionDay15DemoData(t *testing.T) {
 }
 
 func TestSolutionDay15RealData(t *testing.T) {
-	expected := []int{-1, -1}
+	expected := []int{506437, -1}
 
 	part01, part02 := Solve("./input.txt")
 	actual := []int{part01, part02}
