@@ -20,9 +20,7 @@ func hash(data string) int {
 }
 
 func part01(lines []string) int {
-	sequences := strings.Split(lines[0], ",")
-	hashed := util.Map(sequences, hash)
-	return util.Sum(hashed)
+	return util.Sum(util.Map(strings.Split(lines[0], ","), hash))
 }
 
 func part02(lines []string) int {
