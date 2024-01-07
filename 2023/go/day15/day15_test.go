@@ -1,16 +1,29 @@
 package day15
 
-/*
-func TestSolutionDay15(t *testing.T) {
-	solution01, solution02 := 0, 0
-	part01, part02 := Solve("./input.txt")
+import "testing"
 
-	if part01 != solution01 {
-		t.Fatalf("Part01 solution expected %d, was %d", solution01, part01)
-	}
+func TestSolutionDay15DemoData(t *testing.T) {
+	expected := []int{-1, -1}
 
-	if part02 != solution02 {
-		t.Fatalf("Part02 solution expected %d, was %d", solution02, part02)
+	part01, part02 := Solve("./input_demo.txt")
+	actual := []int{part01, part02}
+
+	for i, expectation := range expected {
+		if expectation != actual[i] {
+			t.Fatalf("demo data part %d expected %d, was %d", i+1, expectation, actual[i])
+		}
 	}
 }
-*/
+
+func TestSolutionDay15RealData(t *testing.T) {
+	expected := []int{-1, -1}
+
+	part01, part02 := Solve("./input.txt")
+	actual := []int{part01, part02}
+
+	for i, expectation := range expected {
+		if expectation != actual[i] {
+			t.Fatalf("real data part %d expected %d, was %d", i+1, expectation, actual[i])
+		}
+	}
+}
