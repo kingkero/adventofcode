@@ -1,6 +1,7 @@
 package day14
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -9,7 +10,6 @@ import (
 
 type Platform struct {
 	matrix [][]string
-	cols   [][]string
 }
 
 func NewPlatform(lines []string) *Platform {
@@ -19,7 +19,7 @@ func NewPlatform(lines []string) *Platform {
 		matrix[i] = strings.Split(line, "")
 	}
 
-	return &Platform{matrix, nil}
+	return &Platform{matrix}
 }
 
 func (platform Platform) getColumns() [][]string {
@@ -48,7 +48,7 @@ func getNextRoundedRockIndex(col []string, startIndex int) int {
 	return -1
 }
 
-func (platform Platform) tiltNorth() *Platform {
+func (platform *Platform) tiltNorth() {
 	cols := platform.getColumns()
 
 	// similar to bubblesort, move "O" up if encoutering "."
@@ -65,15 +65,23 @@ func (platform Platform) tiltNorth() *Platform {
 		}
 	}
 
-	return &Platform{nil, cols}
+	for i, col := range cols {
+		for j, element := range col {
+			platform.matrix[j][i] = element
+		}
+	}
+
+	for _, row := range platform.matrix {
+		fmt.Println(strings.Join(row, ""))
+	}
 }
 
 func (platform Platform) getTotalLoad() int {
 	result := 0
-	height := len(platform.cols[0])
+	height := len(platform.matrix)
 
-	for _, col := range platform.cols {
-		for i, element := range col {
+	for i, row := range platform.matrix {
+		for _, element := range row {
 			if element == "O" {
 				result += height - i
 			}
@@ -83,8 +91,13 @@ func (platform Platform) getTotalLoad() int {
 	return result
 }
 
+func (platform *Platform) cycle() {
+	platform.tiltNorth()
+}
+
 func part01(platform Platform) int {
-	return platform.tiltNorth().getTotalLoad()
+	platform.tiltNorth()
+	return platform.getTotalLoad()
 }
 
 func part02(platform Platform) int {
