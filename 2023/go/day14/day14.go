@@ -1,7 +1,9 @@
 package day14
 
 import (
+	"fmt"
 	"log"
+	"slices"
 	"strings"
 
 	"github.com/kingkero/adventofcode/2023/go/util"
@@ -62,6 +64,13 @@ func (platform *Platform) tilt(direction Direction) {
 	if direction == North {
 		data = platform.getColumns()
 	}
+	if direction == South {
+		data = platform.getColumns()
+
+		for _, col := range data {
+			slices.Reverse(col)
+		}
+	}
 
 	for _, list := range data {
 		for j := 0; j < len(list)-1; j++ {
@@ -76,14 +85,17 @@ func (platform *Platform) tilt(direction Direction) {
 		}
 	}
 
-	if direction == North {
+	if direction == North || direction == South {
 		for i, col := range data {
+			if direction == South {
+				slices.Reverse(col)
+			}
+
 			for j, element := range col {
 				platform.matrix[j][i] = element
 			}
 		}
 	}
-
 }
 
 func (platform Platform) getTotalLoad() int {
@@ -103,7 +115,20 @@ func (platform Platform) getTotalLoad() int {
 
 func (platform *Platform) cycle() {
 	platform.tilt(North)
+	for _, row := range platform.matrix {
+		fmt.Println(strings.Join(row, ""))
+	}
+	fmt.Println()
 	platform.tilt(West)
+	for _, row := range platform.matrix {
+		fmt.Println(strings.Join(row, ""))
+	}
+	fmt.Println()
+	platform.tilt(South)
+	for _, row := range platform.matrix {
+		fmt.Println(strings.Join(row, ""))
+	}
+	fmt.Println()
 	// platform.tiltSouth()
 	// fmt.Println()
 	// platform.tiltEast()
@@ -111,7 +136,7 @@ func (platform *Platform) cycle() {
 }
 
 func part01(platform Platform) int {
-	platform.tilt(North)
+	// platform.tilt(North)
 	return platform.getTotalLoad()
 }
 
