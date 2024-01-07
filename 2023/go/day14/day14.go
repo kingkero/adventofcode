@@ -70,6 +70,21 @@ func (platform *Platform) tiltNorth() {
 			platform.matrix[j][i] = element
 		}
 	}
+}
+
+func (platform *Platform) tiltWest() {
+	for _, row := range platform.matrix {
+		for j := 0; j < len(row)-1; j++ {
+			if row[j] == "O" || row[j] == "#" {
+				continue
+			}
+
+			if nextRoundRock := getNextRoundedRockIndex(row, j); nextRoundRock > -1 {
+				row[j] = "O"
+				row[nextRoundRock] = "."
+			}
+		}
+	}
 
 	for _, row := range platform.matrix {
 		fmt.Println(strings.Join(row, ""))
@@ -93,6 +108,13 @@ func (platform Platform) getTotalLoad() int {
 
 func (platform *Platform) cycle() {
 	platform.tiltNorth()
+	fmt.Println()
+	platform.tiltWest()
+	fmt.Println()
+	// platform.tiltSouth()
+	fmt.Println()
+	// platform.tiltEast()
+	fmt.Println()
 }
 
 func part01(platform Platform) int {
@@ -101,7 +123,10 @@ func part01(platform Platform) int {
 }
 
 func part02(platform Platform) int {
-	return 0
+	for i := 0; i < 1; i++ {
+		platform.cycle()
+	}
+	return platform.getTotalLoad()
 }
 
 func Solve(input string) (int, int) {
