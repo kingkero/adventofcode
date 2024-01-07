@@ -16,7 +16,7 @@ func TestSolutionDay14DemoData(t *testing.T) {
 }
 
 func TestSolutionDay14RealData(t *testing.T) {
-	expected := []int{109654, 0}
+	expected := []int{109654, 94876}
 
 	part01, part02 := Solve("./input.txt")
 	actual := []int{part01, part02}
