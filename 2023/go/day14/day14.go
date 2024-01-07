@@ -1,7 +1,6 @@
 package day14
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -87,25 +86,6 @@ func (platform *Platform) tilt(direction Direction) {
 
 }
 
-func (platform *Platform) tiltWest() {
-	for _, row := range platform.matrix {
-		for j := 0; j < len(row)-1; j++ {
-			if row[j] == "O" || row[j] == "#" {
-				continue
-			}
-
-			if nextRoundRock := getNextRoundedRockIndex(row, j); nextRoundRock > -1 {
-				row[j] = "O"
-				row[nextRoundRock] = "."
-			}
-		}
-	}
-
-	for _, row := range platform.matrix {
-		fmt.Println(strings.Join(row, ""))
-	}
-}
-
 func (platform Platform) getTotalLoad() int {
 	result := 0
 	height := len(platform.matrix)
@@ -122,10 +102,8 @@ func (platform Platform) getTotalLoad() int {
 }
 
 func (platform *Platform) cycle() {
-	// platform.tiltNorth()
-	// fmt.Println()
-	// platform.tiltWest()
-	// fmt.Println()
+	platform.tilt(North)
+	platform.tilt(West)
 	// platform.tiltSouth()
 	// fmt.Println()
 	// platform.tiltEast()
