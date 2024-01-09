@@ -13,6 +13,11 @@ type Number interface {
 	constraints.Integer | constraints.Float
 }
 
+type Point struct {
+	Row int
+	Col int
+}
+
 // Read a complete file line by line into memory.
 func ReadFile(input string) ([]string, error) {
 	file, err := os.Open(input)
