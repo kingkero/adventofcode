@@ -5,7 +5,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/gookit/goutil/dump"
 	"github.com/kingkero/adventofcode/2023/go/util"
 )
 
@@ -39,19 +38,36 @@ func part02(lines []string) int {
 
 		if len(equals) == 1 {
 			label := equals[0][:len(equals[0])-1]
-			hashMap[hash(label)] = slices.DeleteFunc(hashMap[hash(label)], func(lens *Lens) bool {
+			labelHash := hash(label)
+			hashMap[labelHash] = slices.DeleteFunc(hashMap[labelHash], func(lens *Lens) bool {
 				return lens.label == label
 			})
 			continue
 		}
 
-		lens := &Lens{equals[0], util.ParseInt(equals[1])}
+		label := equals[0]
+		labelHash := hash(label)
+
+		lens := &Lens{label, util.ParseInt(equals[1])}
+
+		if index := slices.IndexFunc(hashMap[labelHash], func(lens *Lens) bool {
+			return lens.label == label
+		}); index != -1 {
+			hashMap[labelHash][index] = lens
+			continue
+		}
+
 		hashMap[hash(equals[0])] = append(hashMap[hash(equals[0])], lens)
 	}
 
-	dump.P(hashMap)
+	result := 0
+	for box, list := range hashMap {
+		for index, lens := range list {
+			result += (box + 1) * (index + 1) * lens.focalLength
+		}
+	}
 
-	return 0
+	return result
 }
 
 func Solve(input string) (int, int) {
