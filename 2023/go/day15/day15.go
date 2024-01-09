@@ -57,7 +57,7 @@ func part02(lines []string) int {
 			continue
 		}
 
-		hashMap[hash(equals[0])] = append(hashMap[hash(equals[0])], lens)
+		hashMap[labelHash] = append(hashMap[labelHash], lens)
 	}
 
 	result := 0
