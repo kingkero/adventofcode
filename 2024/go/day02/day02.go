@@ -7,43 +7,47 @@ import (
 	"github.com/kingkero/adventofcode/2024/go/util"
 )
 
+func isLineSafe(line []int) bool {
+	isAscending := line[0] < line[1]
+	for i := 0; i < len(line)-1; i++ {
+		if line[i] == line[i+1] {
+			return false
+		}
+
+		if isAscending {
+			if line[i] > line[i+1] {
+				return false
+			}
+
+			if line[i+1]-line[i] > 3 {
+				return false
+			}
+		} else {
+			if line[i] < line[i+1] {
+				return false
+			}
+
+			if line[i]-line[i+1] > 3 {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
 func Part01(input []string) string {
 	safeReports := 0
 
-out:
 	for _, line := range input {
-		// isAscending := true
 		recordings := util.Map(strings.Split(line, " "), util.ParseInt)
 
-		isAscending := recordings[0] < recordings[1]
-		for i := 0; i < len(recordings)-1; i++ {
-			if recordings[i] == recordings[i+1] {
-				continue out
-			}
-
-			if isAscending {
-				if recordings[i] > recordings[i+1] {
-					continue out
-				}
-
-				if recordings[i+1]-recordings[i] > 3 {
-					continue out
-				}
-			} else {
-				if recordings[i] < recordings[i+1] {
-					continue out
-				}
-
-				if recordings[i]-recordings[i+1] > 3 {
-					continue out
-				}
-			}
+		if isLineSafe(recordings) {
+			safeReports++
 		}
-
-		safeReports++
 	}
 
-	return strconv.Itoa(int(safeReports))
+	return strconv.Itoa(safeReports)
 }
 
 func Part02(input []string) string {
