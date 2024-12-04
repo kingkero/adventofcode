@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 4, ' ', 0)
 
 	solveDay(i, writer, 1, day01.Part01, day01.Part02)
 	solveDay(i, writer, 2, day02.Part01, day02.Part02)
