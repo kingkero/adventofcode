@@ -5,8 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"slices"
+	"strconv"
+	"strings"
+
+	"github.com/kingkero/adventofcode/2024/go/day01"
 )
+
+type Solver interface {
+	Part1([]string) string
+	Part2([]string) string
+}
 
 func ReadFile(input string) ([]string, error) {
 	file, err := os.Open(input)
@@ -27,77 +35,114 @@ func ReadFile(input string) ([]string, error) {
 }
 
 func part1(lines []string) {
-	left := make([]uint, 0, len(lines))
-	right := make([]uint, 0, len(lines))
+	safeReports := 0
 
+out:
 	for _, line := range lines {
-		var l, r uint
-		_, err := fmt.Sscanf(line, "%d   %d", &l, &r)
-		if err != nil {
-			log.Fatal(line, err)
+		// isAscending := true
+		recordings := Map(strings.Split(line, " "), ParseInt)
+
+		isAscending := recordings[0] < recordings[1]
+		for i := 0; i < len(recordings)-1; i++ {
+			if recordings[i] == recordings[i+1] {
+				continue out
+			}
+
+			if isAscending {
+				if recordings[i] > recordings[i+1] {
+					continue out
+				}
+
+				if recordings[i+1]-recordings[i] > 3 {
+					continue out
+				}
+			} else {
+				if recordings[i] < recordings[i+1] {
+					continue out
+				}
+
+				if recordings[i]-recordings[i+1] > 3 {
+					continue out
+				}
+			}
 		}
 
-		left = append(left, l)
-		right = append(right, r)
+		safeReports++
 	}
 
-	slices.Sort(left)
-	slices.Sort(right)
-
-	distances := uint(0)
-	for i := 0; i < len(left); i++ {
-		if right[i] < left[i] {
-			distances += left[i] - right[i]
-		} else {
-			distances += right[i] - left[i]
-		}
-	}
-
-	fmt.Printf("%v\n", distances)
+	fmt.Println(safeReports)
 }
 
 func part2(lines []string) {
-	left := make([]uint, 0, len(lines))
-	right := make([]uint, 0, len(lines))
-	similarities := make(map[uint]uint)
+	safeReports := 0
 
 	for _, line := range lines {
-		var l, r uint
-		_, err := fmt.Sscanf(line, "%d   %d", &l, &r)
-		if err != nil {
-			log.Fatal(line, err)
+		// isAscending := true
+		recordings := Map(strings.Split(line, " "), ParseInt)
+
+		isAscending := recordings[0] < recordings[1]
+		errors := 0
+		for i := 0; i < len(recordings)-1; i++ {
+			if recordings[i] == recordings[i+1] {
+				errors++
+				continue
+			}
+
+			if isAscending {
+				if recordings[i] > recordings[i+1] {
+					errors++
+					continue
+				}
+
+				if recordings[i+1]-recordings[i] > 3 {
+					errors++
+					continue
+				}
+			} else {
+				if recordings[i] < recordings[i+1] {
+					errors++
+					continue
+				}
+
+				if recordings[i]-recordings[i+1] > 3 {
+					errors++
+					continue
+				}
+			}
 		}
 
-		left = append(left, l)
-		right = append(right, r)
-	}
-
-	slices.Sort(left)
-	slices.Sort(right)
-
-	result := uint(0)
-	for i := 0; i < len(left); i++ {
-		if v, ok := similarities[left[i]]; ok {
-			result += left[i] * v
+		if errors > 2 {
 			continue
 		}
 
-		countSimilarities := uint(0)
-		for _, item := range right {
-			if item == left[i] {
-				countSimilarities++
-			}
-		}
-		similarities[left[i]] = countSimilarities
-		result += left[i] * countSimilarities
+		safeReports++
 	}
 
-	fmt.Printf("%v\n", result)
+	fmt.Println(safeReports)
 }
 
 func main() {
 	data, _ := ReadFile("./inputs/day1_1.txt")
 
-	part1(data)
-	part2(data)
+	fmt.Println(day01.Part01(data))
+	fmt.Println(day01.Part02(data))
+
+	// part1(data)
+	// part2(data)
+}
+
+func Map[T, U any](ts []T, f func(T) U) []U {
+	us := make([]U, len(ts))
+	for i := range ts {
+		us[i] = f(ts[i])
+	}
+	return us
+}
+
+func ParseInt(value string) int {
+	val, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return int(val)
 }
