@@ -51,5 +51,29 @@ func Part01(input []string) string {
 }
 
 func Part02(input []string) string {
-	return ""
+	safeReports := 0
+
+out:
+	for _, line := range input {
+		recordings := util.Map(strings.Split(line, " "), util.ParseInt)
+
+		if isLineSafe(recordings) {
+			safeReports++
+			continue
+		}
+
+		// remove one element at a time and check if the line is safe
+		for i := 0; i < len(recordings); i++ {
+			removed := make([]int, 0, len(recordings)-1)
+			removed = append(removed, recordings[:i]...)
+			removed = append(removed, recordings[i+1:]...)
+
+			if isLineSafe(removed) {
+				safeReports++
+				continue out
+			}
+		}
+	}
+
+	return strconv.Itoa(safeReports)
 }
