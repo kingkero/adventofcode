@@ -21,48 +21,27 @@ func main() {
 
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 
-	solveDay01(i, writer)
-	solveDay02(i, writer)
+	solveDay(i, writer, 1, day01.Part01, day01.Part02)
+	solveDay(i, writer, 2, day02.Part01, day02.Part02)
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func solveDay01(i *aocutil.Input, writer *tabwriter.Writer) {
-	day := 1
-
+func solveDay(i *aocutil.Input, writer *tabwriter.Writer, day int, part01 func([]string) string, part02 func([]string) string) {
 	lines, err := i.Strings(2024, day)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	previous := time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 1, day01.Part01(lines), time.Since(previous)); err != nil {
+	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 1, part01(lines), time.Since(previous)); err != nil {
 		log.Fatal(err)
 	}
 
 	previous = time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 2, day01.Part02(lines), time.Since(previous)); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func solveDay02(i *aocutil.Input, writer *tabwriter.Writer) {
-	day := 2
-
-	lines, err := i.Strings(2024, day)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	previous := time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 1, day02.Part01(lines), time.Since(previous)); err != nil {
-		log.Fatal(err)
-	}
-
-	previous = time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 2, day02.Part02(lines), time.Since(previous)); err != nil {
+	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 2, part02(lines), time.Since(previous)); err != nil {
 		log.Fatal(err)
 	}
 }
