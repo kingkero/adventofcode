@@ -129,6 +129,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	solveDay01(i)
+}
+
+func solveDay01(i *aocutil.Input) {
 	lines, err := i.Strings(2024, 1)
 	if err != nil {
 		log.Fatal(err)
@@ -136,9 +140,6 @@ func main() {
 
 	fmt.Println(day01.Part01(lines))
 	fmt.Println(day01.Part02(lines))
-
-	// part1(data)
-	// part2(data)
 }
 
 func Map[T, U any](ts []T, f func(T) U) []U {
