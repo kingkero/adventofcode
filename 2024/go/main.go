@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/echojc/aocutil"
+
 	"github.com/kingkero/adventofcode/2024/go/day01"
 )
 
@@ -122,10 +124,18 @@ func part2(lines []string) {
 }
 
 func main() {
-	data, _ := ReadFile("./inputs/day1_1.txt")
+	i, err := aocutil.NewInputFromFile("session_id")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Println(day01.Part01(data))
-	fmt.Println(day01.Part02(data))
+	lines, err := i.Strings(2024, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(day01.Part01(lines))
+	fmt.Println(day01.Part02(lines))
 
 	// part1(data)
 	// part2(data)
