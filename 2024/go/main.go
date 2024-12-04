@@ -1,41 +1,18 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
-	"strconv"
-	"strings"
+	"text/tabwriter"
+	"time"
 
 	"github.com/echojc/aocutil"
 
 	"github.com/kingkero/adventofcode/2024/go/day01"
 )
 
-type Solver interface {
-	Part1([]string) string
-	Part2([]string) string
-}
-
-func ReadFile(input string) ([]string, error) {
-	file, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	var lines []string
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-
-	return lines, scanner.Err()
-}
-
+/*
 func part1(lines []string) {
 	safeReports := 0
 
@@ -122,6 +99,7 @@ func part2(lines []string) {
 
 	fmt.Println(safeReports)
 }
+*/
 
 func main() {
 	i, err := aocutil.NewInputFromFile("session_id")
@@ -129,31 +107,28 @@ func main() {
 		log.Fatal(err)
 	}
 
-	solveDay01(i)
+	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+
+	solveDay01(i, writer)
+
+	if err = writer.Flush(); err != nil {
+		log.Fatal(err)
+	}
 }
 
-func solveDay01(i *aocutil.Input) {
+func solveDay01(i *aocutil.Input, writer *tabwriter.Writer) {
 	lines, err := i.Strings(2024, 1)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(day01.Part01(lines))
-	fmt.Println(day01.Part02(lines))
-}
-
-func Map[T, U any](ts []T, f func(T) U) []U {
-	us := make([]U, len(ts))
-	for i := range ts {
-		us[i] = f(ts[i])
+	previous := time.Now()
+	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", 1, 1, day01.Part01(lines), time.Since(previous)); err != nil {
+		log.Fatal(err)
 	}
-	return us
-}
 
-func ParseInt(value string) int {
-	val, err := strconv.ParseInt(value, 10, 64)
-	if err != nil {
-		panic(err)
+	previous = time.Now()
+	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", 1, 2, day01.Part02(lines), time.Since(previous)); err != nil {
+		log.Fatal(err)
 	}
-	return int(val)
 }
