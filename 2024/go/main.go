@@ -11,6 +11,8 @@ import (
 
 	"github.com/kingkero/adventofcode/2024/go/day01"
 	"github.com/kingkero/adventofcode/2024/go/day02"
+	"github.com/kingkero/adventofcode/2024/go/day03"
+	"github.com/kingkero/adventofcode/2024/go/day04"
 )
 
 func main() {
@@ -23,6 +25,8 @@ func main() {
 
 	solveDay(i, writer, 1, day01.Part01, day01.Part02)
 	solveDay(i, writer, 2, day02.Part01, day02.Part02)
+	solveDay(i, writer, 3, day03.Part01, day03.Part02)
+	solveDay(i, writer, 4, day04.Part01, day04.Part02)
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)
@@ -36,12 +40,7 @@ func solveDay(i *aocutil.Input, writer *tabwriter.Writer, day int, part01 func([
 	}
 
 	previous := time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 1, part01(lines), time.Since(previous)); err != nil {
-		log.Fatal(err)
-	}
-
-	previous = time.Now()
-	if _, err := fmt.Fprintf(writer, "Day %d / Part %d:\t%v\ttook %v\n", day, 2, part02(lines), time.Since(previous)); err != nil {
+	if _, err := fmt.Fprintf(writer, "Day %d:\t%v\t%v\ttook %v\n", day, part01(lines), part02(lines), time.Since(previous)); err != nil {
 		log.Fatal(err)
 	}
 }
