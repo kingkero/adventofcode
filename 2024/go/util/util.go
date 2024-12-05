@@ -22,3 +22,14 @@ func ParseInt(value string) int {
 	}
 	return int(val)
 }
+
+// Filter a list, return only elements that return true for the compare method.
+func Filter[T any](ts []T, f func(T) bool) []T {
+	var result []T
+	for _, t := range ts {
+		if f(t) {
+			result = append(result, t)
+		}
+	}
+	return result
+}
