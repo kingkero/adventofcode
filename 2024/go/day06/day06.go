@@ -3,8 +3,6 @@ package day06
 import (
 	"fmt"
 	"strconv"
-
-	"github.com/kingkero/adventofcode/2024/go/util"
 )
 
 type Point struct {
@@ -14,7 +12,7 @@ type Point struct {
 
 type Matrix struct {
 	Rows, Cols int
-	Values     []string
+	Values     []uint8
 	Visited    []bool
 }
 
@@ -35,23 +33,20 @@ var start *Point
 
 func Part01(input []string) string {
 	matrix = &Matrix{
-		Rows: len(input),
-		Cols: len(input[0]),
-		Values: util.Filter(input, func(s string) bool {
-			return s != ""
-		}),
+		Rows:    len(input),
+		Cols:    len(input[0]),
+		Values:  make([]uint8, len(input)*len(input[0])),
 		Visited: make([]bool, len(input)*len(input[0])*int(AllDirections)),
 	}
 
 	current := &Point{Direction: DirectionNorth}
-outer:
 	for row, line := range input {
 		for col, char := range line {
+			matrix.Values[row*matrix.Cols+col] = uint8(char)
+
 			if char == Start {
 				current.Row = row
 				current.Col = col
-
-				break outer
 			}
 		}
 	}
@@ -72,7 +67,7 @@ func (m *Matrix) at(row, col int) uint8 {
 		return 0
 	}
 
-	return m.Values[row][col]
+	return m.Values[row*m.Cols+col]
 }
 
 func (m *Matrix) setVisited(row, col int, direction uint8) {
