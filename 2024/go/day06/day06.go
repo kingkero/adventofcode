@@ -1,6 +1,7 @@
 package day06
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/kingkero/adventofcode/2024/go/util"
@@ -29,8 +30,11 @@ const (
 const Blocker = 35 // string "#"
 const Start = 94   // string "^"
 
+var matrix *Matrix
+var start *Point
+
 func Part01(input []string) string {
-	m := &Matrix{
+	matrix = &Matrix{
 		Rows: len(input),
 		Cols: len(input[0]),
 		Values: util.Filter(input, func(s string) bool {
@@ -51,12 +55,16 @@ outer:
 			}
 		}
 	}
-
-	for ok := true; ok; ok = move(m, current) {
-		m.setVisited(current.Row, current.Col, current.Direction)
+	start = &Point{
+		Row: current.Row,
+		Col: current.Col,
 	}
 
-	return strconv.Itoa(m.getDistinctVisitedCount())
+	for ok := true; ok; ok = move(matrix, current) {
+		matrix.setVisited(current.Row, current.Col, current.Direction)
+	}
+
+	return strconv.Itoa(matrix.getDistinctVisitedCount())
 }
 
 func (m *Matrix) at(row, col int) uint8 {
@@ -122,6 +130,7 @@ func (m *Matrix) getDistinctVisitedCount() int {
 	return count
 }
 
-func Part02(input []string) string {
+func Part02(_ []string) string {
+	fmt.Printf("%v\n", start)
 	return ""
 }
