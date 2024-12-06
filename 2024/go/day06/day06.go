@@ -18,10 +18,12 @@ type Matrix struct {
 }
 
 const (
-	DirectionNorth uint8 = 1 << iota
+	DirectionNorth uint8 = iota
 	DirectionEast
 	DirectionSouth
 	DirectionWest
+
+	AllDirections
 )
 
 const Blocker = 35 // string "#"
@@ -34,7 +36,7 @@ func Part01(input []string) string {
 		Values: util.Filter(input, func(s string) bool {
 			return s != ""
 		}),
-		Visited: make([]bool, len(input)*len(input[0])),
+		Visited: make([]bool, len(input)*len(input[0])*int(AllDirections)),
 	}
 
 	current := &Point{Direction: DirectionNorth}
@@ -49,12 +51,13 @@ outer:
 			}
 		}
 	}
+	m.setVisited(current.Row, current.Col, current.Direction)
 
 	for ok := true; ok; ok = move(m, current) {
-		m.setVisited(current.Row, current.Col)
+		m.setVisited(current.Row, current.Col, current.Direction)
 	}
 
-	return strconv.Itoa(m.getVisitedCount())
+	return strconv.Itoa(m.getDistinctVisitedCount())
 }
 
 func (m *Matrix) at(row, col int) uint8 {
@@ -65,8 +68,12 @@ func (m *Matrix) at(row, col int) uint8 {
 	return m.Values[row][col]
 }
 
-func (m *Matrix) setVisited(row, col int) {
-	m.Visited[row*m.Cols+col] = true
+func (m *Matrix) setVisited(row, col int, direction uint8) {
+	m.Visited[(int(direction)*m.Rows*m.Cols)+(col*m.Rows)+row] = true
+}
+
+func (m *Matrix) getVisited(row, col int, direction uint8) bool {
+	return m.Visited[(int(direction)*m.Rows*m.Cols)+(col*m.Rows)+row]
 }
 
 func move(m *Matrix, current *Point) bool {
@@ -95,16 +102,21 @@ func move(m *Matrix, current *Point) bool {
 		} else {
 			current.Col--
 		}
+	default:
+		panic("unhandled default case")
 	}
 
 	return current.Row >= 0 && current.Row < m.Rows && current.Col >= 0 && current.Col < m.Cols
 }
 
-func (m *Matrix) getVisitedCount() int {
+func (m *Matrix) getDistinctVisitedCount() int {
 	count := 0
-	for _, visited := range m.Visited {
-		if visited {
-			count++
+
+	for row := 0; row < m.Rows; row++ {
+		for col := 0; col < m.Cols; col++ {
+			if m.getVisited(row, col, DirectionNorth) || m.getVisited(row, col, DirectionEast) || m.getVisited(row, col, DirectionSouth) || m.getVisited(row, col, DirectionWest) {
+				count++
+			}
 		}
 	}
 
