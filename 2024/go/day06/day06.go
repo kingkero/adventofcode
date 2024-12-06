@@ -51,7 +51,6 @@ outer:
 			}
 		}
 	}
-	m.setVisited(current.Row, current.Col, current.Direction)
 
 	for ok := true; ok; ok = move(m, current) {
 		m.setVisited(current.Row, current.Col, current.Direction)
