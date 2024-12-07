@@ -15,6 +15,7 @@ import (
 	"github.com/kingkero/adventofcode/2024/go/day04"
 	"github.com/kingkero/adventofcode/2024/go/day05"
 	"github.com/kingkero/adventofcode/2024/go/day06"
+	"github.com/kingkero/adventofcode/2024/go/day07"
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 	solveDay(i, writer, 4, day04.Part01, day04.Part02)
 	solveDay(i, writer, 5, day05.Part01, day05.Part02)
 	solveDay(i, writer, 6, day06.Part01, day06.Part02)
+	solveDay(i, writer, 7, day07.Part01, day07.Part02)
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)
