@@ -1,7 +1,6 @@
 package day06
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -126,6 +125,54 @@ func (m *Matrix) getDistinctVisitedCount() int {
 }
 
 func Part02(_ []string) string {
-	fmt.Printf("%v\n", start)
-	return ""
+	// iterate over all visited except start
+	// place block on them
+	// try, on loops increment result
+
+	localCopy := &Matrix{
+		Rows:    matrix.Rows,
+		Cols:    matrix.Cols,
+		Values:  make([]uint8, len(matrix.Values)),
+		Visited: make([]bool, len(matrix.Visited)),
+	}
+
+	result := 0
+
+	var current *Point
+
+	for row := 0; row < matrix.Rows; row++ {
+		for col := 0; col < matrix.Cols; col++ {
+			if row == start.Row && col == start.Col {
+				continue
+			}
+
+			if matrix.getVisited(row, col, DirectionNorth) || matrix.getVisited(row, col, DirectionEast) || matrix.getVisited(row, col, DirectionSouth) || matrix.getVisited(row, col, DirectionWest) {
+				localCopy.Values[row*matrix.Cols+col] = Blocker
+				localCopy.Visited = make([]bool, matrix.Rows*matrix.Cols*int(AllDirections))
+
+				current = &Point{
+					Row:       start.Row,
+					Col:       start.Col,
+					Direction: start.Direction,
+				}
+
+				// fmt.Printf("%+v\n", localCopy)
+
+			moving:
+				for ok := true; ok; ok = move(localCopy, current) {
+					if localCopy.getVisited(current.Row, current.Col, current.Direction) {
+						result++
+
+						break moving
+					}
+
+					localCopy.setVisited(current.Row, current.Col, current.Direction)
+				}
+
+				localCopy.Values[row*matrix.Cols+col] = matrix.at(row, col)
+			}
+		}
+	}
+
+	return strconv.Itoa(result)
 }
