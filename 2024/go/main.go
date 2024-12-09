@@ -17,7 +17,13 @@ import (
 	"github.com/kingkero/adventofcode/2024/go/day06"
 	"github.com/kingkero/adventofcode/2024/go/day07"
 	"github.com/kingkero/adventofcode/2024/go/day08"
+	"github.com/kingkero/adventofcode/2024/go/day09"
 )
+
+type Day struct {
+	Part01 func([]string) string
+	Part02 func([]string) string
+}
 
 func main() {
 	i, err := aocutil.NewInputFromFile("session_id")
@@ -27,14 +33,19 @@ func main() {
 
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 4, ' ', 0)
 
-	solveDay(i, writer, 1, day01.Part01, day01.Part02)
-	solveDay(i, writer, 2, day02.Part01, day02.Part02)
-	solveDay(i, writer, 3, day03.Part01, day03.Part02)
-	solveDay(i, writer, 4, day04.Part01, day04.Part02)
-	solveDay(i, writer, 5, day05.Part01, day05.Part02)
-	solveDay(i, writer, 6, day06.Part01, day06.Part02)
-	solveDay(i, writer, 7, day07.Part01, day07.Part02)
-	solveDay(i, writer, 8, day08.Part01, day08.Part02)
+	for key, day := range []Day{
+		{day01.Part01, day01.Part02},
+		{day02.Part01, day02.Part02},
+		{day03.Part01, day03.Part02},
+		{day04.Part01, day04.Part02},
+		{day05.Part01, day05.Part02},
+		{day06.Part01, day06.Part02},
+		{day07.Part01, day07.Part02},
+		{day08.Part01, day08.Part02},
+		{day09.Part01, day09.Part02},
+	} {
+		solveDay(i, writer, key+1, day.Part01, day.Part02)
+	}
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)
