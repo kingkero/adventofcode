@@ -1,0 +1,6 @@
+services:
+  php:
+    image: sineverba/php8xc:1.18.0
+    volumes:
+      - ./:/app
+

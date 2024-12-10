@@ -1,0 +1,13 @@
+{
+    "name": "kingkero/adventofcode24",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Adventofcode24\\": "src/"
+        }
+    },
+    "require": {}
+}
