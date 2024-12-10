@@ -6,7 +6,9 @@ namespace Adventofcode24;
 
 interface Solver
 {
-    public function solvePart1(string $input): string;
+    public function __construct(string $input);
 
-    public function solvePart2(string $input): string;
+    public function solvePart1(): string;
+
+    public function solvePart2(): string;
 }
