@@ -32,6 +32,15 @@ func ParseUint8(value string) uint8 {
 	return uint8(val)
 }
 
+// ParseUint64 parses an integer, panics if an error happened.
+func ParseUint64(value string) uint64 {
+	val, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	return uint64(val)
+}
+
 // Filter a list, return only elements that return true for the compare method.
 func Filter[T any](ts []T, f func(T) bool) []T {
 	var result []T
