@@ -49,9 +49,19 @@ func smartBlink(stones []uint64, amountOfBlinks int) uint64 {
 	return result
 }
 
+var alreadyBlinked = make(map[uint64]map[int]uint64)
+
 func smartBlinkStone(stone uint64, amountOfBlinks int) uint64 {
 	if amountOfBlinks == 0 {
 		return 1
+	}
+
+	if _, ok := alreadyBlinked[stone]; !ok {
+		alreadyBlinked[stone] = make(map[int]uint64)
+	}
+
+	if val, ok := alreadyBlinked[stone][amountOfBlinks]; ok {
+		return val
 	}
 
 	a, b, split := applyRule(stone)
@@ -60,7 +70,13 @@ func smartBlinkStone(stone uint64, amountOfBlinks int) uint64 {
 		return smartBlinkStone(a, amountOfBlinks-1) + smartBlinkStone(b, amountOfBlinks-1)
 	}
 
-	return smartBlinkStone(a, amountOfBlinks-1)
+	result := smartBlinkStone(a, amountOfBlinks-1)
+
+	if _, ok := alreadyBlinked[stone][amountOfBlinks]; !ok {
+		alreadyBlinked[stone][amountOfBlinks] = result
+	}
+
+	return result
 }
 
 func applyRule(stone uint64) (uint64, uint64, bool) {
