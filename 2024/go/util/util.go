@@ -1,7 +1,10 @@
 package util
 
 import (
+	"slices"
 	"strconv"
+
+	"golang.org/x/exp/constraints"
 )
 
 // Map returns a list of elements, where the new element is the result of
@@ -50,4 +53,27 @@ func Filter[T any](ts []T, f func(T) bool) []T {
 		}
 	}
 	return result
+}
+
+// Abs returns the absolute value of an integer
+func Abs[T constraints.Integer](value T) T {
+	if value < 0 {
+		return -value
+	}
+
+	return value
+}
+
+type Point struct {
+	X, Y int
+}
+
+// DistanceTo returns the manhattan distance between two points.
+func (p Point) DistanceTo(other *Point) int {
+	return slices.Max([]int{Abs(p.X - other.X), Abs(p.Y - other.Y)})
+}
+
+// String returns a string representation of the point.
+func (p Point) String() string {
+	return "util.Point(" + strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y) + ")"
 }
