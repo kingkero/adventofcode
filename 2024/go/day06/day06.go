@@ -2,11 +2,13 @@ package day06
 
 import (
 	"strconv"
+
+	"github.com/kingkero/adventofcode/2024/go/util"
 )
 
 type Point struct {
 	Row, Col  int
-	Direction uint8
+	Direction util.Direction
 }
 
 type Matrix struct {
@@ -14,15 +16,6 @@ type Matrix struct {
 	Values     []uint8
 	Visited    []bool
 }
-
-const (
-	DirectionNorth uint8 = iota
-	DirectionEast
-	DirectionSouth
-	DirectionWest
-
-	AllDirections
-)
 
 const Blocker = 35 // string "#"
 const Start = 94   // string "^"
@@ -35,10 +28,10 @@ func Part01(input []string) string {
 		Rows:    len(input),
 		Cols:    len(input[0]),
 		Values:  make([]uint8, len(input)*len(input[0])),
-		Visited: make([]bool, len(input)*len(input[0])*int(AllDirections)),
+		Visited: make([]bool, len(input)*len(input[0])*int(util.AllDirections)),
 	}
 
-	current := &Point{Direction: DirectionNorth}
+	current := &Point{Direction: util.DirectionNorth}
 	for row, line := range input {
 		for col, char := range line {
 			matrix.Values[row*matrix.Cols+col] = uint8(char)
@@ -69,37 +62,37 @@ func (m *Matrix) at(row, col int) uint8 {
 	return m.Values[row*m.Cols+col]
 }
 
-func (m *Matrix) setVisited(row, col int, direction uint8) {
+func (m *Matrix) setVisited(row, col int, direction util.Direction) {
 	m.Visited[(int(direction)*m.Rows*m.Cols)+(col*m.Rows)+row] = true
 }
 
-func (m *Matrix) getVisited(row, col int, direction uint8) bool {
+func (m *Matrix) getVisited(row, col int, direction util.Direction) bool {
 	return m.Visited[(int(direction)*m.Rows*m.Cols)+(col*m.Rows)+row]
 }
 
 func move(m *Matrix, current *Point) bool {
 	switch current.Direction {
-	case DirectionNorth:
+	case util.DirectionNorth:
 		if m.at(current.Row-1, current.Col) == Blocker {
-			current.Direction = DirectionEast
+			current.Direction = util.DirectionEast
 		} else {
 			current.Row--
 		}
-	case DirectionEast:
+	case util.DirectionEast:
 		if m.at(current.Row, current.Col+1) == Blocker {
-			current.Direction = DirectionSouth
+			current.Direction = util.DirectionSouth
 		} else {
 			current.Col++
 		}
-	case DirectionSouth:
+	case util.DirectionSouth:
 		if m.at(current.Row+1, current.Col) == Blocker {
-			current.Direction = DirectionWest
+			current.Direction = util.DirectionWest
 		} else {
 			current.Row++
 		}
-	case DirectionWest:
+	case util.DirectionWest:
 		if m.at(current.Row, current.Col-1) == Blocker {
-			current.Direction = DirectionNorth
+			current.Direction = util.DirectionNorth
 		} else {
 			current.Col--
 		}
@@ -115,7 +108,7 @@ func (m *Matrix) getDistinctVisitedCount() int {
 
 	for row := 0; row < m.Rows; row++ {
 		for col := 0; col < m.Cols; col++ {
-			if m.getVisited(row, col, DirectionNorth) || m.getVisited(row, col, DirectionEast) || m.getVisited(row, col, DirectionSouth) || m.getVisited(row, col, DirectionWest) {
+			if m.getVisited(row, col, util.DirectionNorth) || m.getVisited(row, col, util.DirectionEast) || m.getVisited(row, col, util.DirectionSouth) || m.getVisited(row, col, util.DirectionWest) {
 				count++
 			}
 		}
@@ -146,9 +139,9 @@ func Part02(_ []string) string {
 				continue
 			}
 
-			if matrix.getVisited(row, col, DirectionNorth) || matrix.getVisited(row, col, DirectionEast) || matrix.getVisited(row, col, DirectionSouth) || matrix.getVisited(row, col, DirectionWest) {
+			if matrix.getVisited(row, col, util.DirectionNorth) || matrix.getVisited(row, col, util.DirectionEast) || matrix.getVisited(row, col, util.DirectionSouth) || matrix.getVisited(row, col, util.DirectionWest) {
 				localCopy.Values[row*matrix.Cols+col] = Blocker
-				localCopy.Visited = make([]bool, matrix.Rows*matrix.Cols*int(AllDirections))
+				localCopy.Visited = make([]bool, matrix.Rows*matrix.Cols*int(util.AllDirections))
 
 				current = &Point{
 					Row:       start.Row,

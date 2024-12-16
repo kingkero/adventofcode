@@ -77,3 +77,14 @@ func (p Point) DistanceTo(other *Point) int {
 func (p Point) String() string {
 	return "util.Point(" + strconv.Itoa(p.X) + "," + strconv.Itoa(p.Y) + ")"
 }
+
+type Direction uint8
+
+const (
+	DirectionNorth Direction = iota
+	DirectionEast
+	DirectionSouth
+	DirectionWest
+
+	AllDirections
+)
