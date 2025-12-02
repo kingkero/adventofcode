@@ -1,7 +1,6 @@
 package day02
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -18,7 +17,7 @@ func patternRepeats(pattern string, rest string) bool {
 
 	for i := 0; i < restLength/patternLength; i++ {
 		for j := 0; j < patternLength; j++ {
-			if rest[i+j:i+j+1] != pattern[j:j+1] {
+			if rest[i*patternLength+j:i*patternLength+j+1] != pattern[j:j+1] {
 				return false
 			}
 		}
@@ -27,7 +26,7 @@ func patternRepeats(pattern string, rest string) bool {
 	return true
 }
 
-func isInvalidID(id string) bool {
+func isInvalidIDPart01(id string) bool {
 	length := len(id)
 
 	if length%2 != 0 {
@@ -35,8 +34,11 @@ func isInvalidID(id string) bool {
 	}
 
 	return id[:length/2] == id[length/2:]
+}
 
-	/* maybe later, now only twice!
+func isInvalidIDPart02(id string) bool {
+	length := len(id)
+
 	for i := 1; i < length; i++ {
 		if patternRepeats(id[0:i], id[i:]) {
 			return true
@@ -44,7 +46,6 @@ func isInvalidID(id string) bool {
 	}
 
 	return false
-	*/
 }
 
 func Part01(input []string) string {
@@ -59,8 +60,7 @@ func Part01(input []string) string {
 		end := util.ParseInt(parts[1])
 
 		for i := start; i <= end; i++ {
-			if isInvalidID(strconv.Itoa(i)) {
-				fmt.Println(i)
+			if isInvalidIDPart01(strconv.Itoa(i)) {
 				sumOfInvalids += i
 			}
 		}
@@ -70,5 +70,22 @@ func Part01(input []string) string {
 }
 
 func Part02(input []string) string {
-	return ""
+	inputRanges := strings.Split(input[0], ",")
+
+	sumOfInvalids := 0
+
+	for _, line := range inputRanges {
+		parts := strings.Split(line, "-")
+
+		start := util.ParseInt(parts[0])
+		end := util.ParseInt(parts[1])
+
+		for i := start; i <= end; i++ {
+			if isInvalidIDPart02(strconv.Itoa(i)) {
+				sumOfInvalids += i
+			}
+		}
+	}
+
+	return strconv.Itoa(sumOfInvalids)
 }
