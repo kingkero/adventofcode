@@ -46,7 +46,6 @@ func isInvalidID(id string) bool {
 func Part01(input []string) string {
 	inputRanges := strings.Split(input[0], ",")
 
-	// ranges := make([]Range, 0, len(inputRanges))
 	sumOfInvalids := 0
 
 	for _, line := range inputRanges {
@@ -56,7 +55,7 @@ func Part01(input []string) string {
 		end := util.ParseInt(parts[1])
 
 		for i := start; i <= end; i++ {
-			if isInvalidID(strconv.Itoa(int(i))) {
+			if isInvalidID(strconv.Itoa(i)) {
 				sumOfInvalids += i
 			}
 		}
