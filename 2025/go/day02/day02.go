@@ -1,6 +1,7 @@
 package day02
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -29,11 +30,13 @@ func patternRepeats(pattern string, rest string) bool {
 func isInvalidID(id string) bool {
 	length := len(id)
 
-	// required?
-	if length <= 1 {
-		return true
+	if length%2 != 0 {
+		return false
 	}
 
+	return id[:length/2] == id[length/2:]
+
+	/* maybe later, now only twice!
 	for i := 1; i < length; i++ {
 		if patternRepeats(id[0:i], id[i:]) {
 			return true
@@ -41,6 +44,7 @@ func isInvalidID(id string) bool {
 	}
 
 	return false
+	*/
 }
 
 func Part01(input []string) string {
@@ -56,6 +60,7 @@ func Part01(input []string) string {
 
 		for i := start; i <= end; i++ {
 			if isInvalidID(strconv.Itoa(i)) {
+				fmt.Println(i)
 				sumOfInvalids += i
 			}
 		}

@@ -12,11 +12,16 @@ func TestIsInvalidID(t *testing.T) {
 		"1112":       false,
 		"1188511885": true,
 		"1188511886": false,
+		"222220":     false,
+		"222221":     false,
+		"222223":     false,
+		"222224":     false,
 	}
 
-	for id, result := range examples {
-		if isInvalidID(id) != result {
-			t.Errorf("%s: expected %v, got %v", id, result, isInvalidID(id))
+	for id, expectedResult := range examples {
+		result := isInvalidID(id)
+		if result != expectedResult {
+			t.Errorf("%s: expected %v, got %v", id, expectedResult, result)
 		}
 	}
 }
