@@ -20,3 +20,6 @@ readonly final class Day01 implements Solver
         return "TODO: Implement solvePart2() method";
     }
 }
+
+$test = new Day01("test");
+$test->solvePart1();
