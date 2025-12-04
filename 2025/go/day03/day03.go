@@ -1,6 +1,7 @@
 package day03
 
 import (
+	"math"
 	"strconv"
 
 	"github.com/kingkero/adventofcode/2025/go/util"
@@ -37,9 +38,24 @@ func Part01(input []string) string {
 		jolt := firstLargest*10 + secondLargest
 		sum += jolt
 	}
+
 	return strconv.Itoa(sum)
 }
 
 func Part02(input []string) string {
-	return ""
+	sum := 0
+
+	for _, line := range input {
+		length := len(line)
+		start := 0
+
+		for i := 11; i >= 0; i-- {
+			value, pos := findLargest(line[start : length-i])
+			start += pos + 1
+
+			sum += value * int(math.Pow(10, float64(i)))
+		}
+	}
+
+	return strconv.Itoa(sum)
 }
