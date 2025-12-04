@@ -12,6 +12,7 @@ import (
 	"github.com/kingkero/adventofcode/2025/go/day01"
 	"github.com/kingkero/adventofcode/2025/go/day02"
 	"github.com/kingkero/adventofcode/2025/go/day03"
+	"github.com/kingkero/adventofcode/2025/go/day04"
 )
 
 type Day struct {
@@ -31,6 +32,7 @@ func main() {
 		{day01.Part01, day01.Part02},
 		{day02.Part01, day02.Part02},
 		{day03.Part01, day03.Part02},
+		{day04.Part01, day04.Part02},
 	} {
 		solveDay(i, writer, key+1, day.Part01, day.Part02)
 	}
