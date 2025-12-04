@@ -20,3 +20,22 @@ func TestPart01(t *testing.T) {
 		t.Errorf("got %s, want 13", result)
 	}
 }
+
+func TestPart02(t *testing.T) {
+	result := Part02([]string{
+		"..@@.@@@@.",
+		"@@@.@.@.@@",
+		"@@@@@.@.@@",
+		"@.@@@@..@.",
+		"@@.@@@@.@@",
+		".@@@@@@@.@",
+		".@.@.@.@@@",
+		"@.@@@.@@@@",
+		".@@@@@@@@.",
+		"@.@.@@@.@.",
+	})
+
+	if result != "43" {
+		t.Errorf("got %s, want 43", result)
+	}
+}
