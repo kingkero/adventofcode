@@ -4,13 +4,26 @@ import "testing"
 
 func TestPart01(t *testing.T) {
 	result := Part01([]string{
-		"123 328  51 64",
-		"45 64  387 23",
-		"6 98  215 314",
-		"*   +   *   +",
+		"123 328  51 64 ",
+		" 45 64  387 23 ",
+		"  6 98  215 314",
+		"*   +   *   +  ",
 	})
 
 	if result != "4277556" {
 		t.Errorf("got %s, want 4277556", result)
+	}
+}
+
+func TestPart02(t *testing.T) {
+	result := Part02([]string{
+		"123 328  51 64 ",
+		" 45 64  387 23 ",
+		"  6 98  215 314",
+		"*   +   *   +  ",
+	})
+
+	if result != "3263827" {
+		t.Errorf("got %s, want 3263827", result)
 	}
 }

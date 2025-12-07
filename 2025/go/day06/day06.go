@@ -40,5 +40,42 @@ func Part01(input []string) string {
 }
 
 func Part02(input []string) string {
-	return strconv.Itoa(0)
+	operators := slices.DeleteFunc(strings.Split(input[len(input)-1], " "), func(s string) bool {
+		return s == ""
+	})
+
+	sum := 0
+	currentOperatorIndex := len(operators) - 1
+	current := -1
+
+	for col := len(input[0]) - 1; col >= 0; col-- {
+		var parts strings.Builder
+		for row := 0; row < len(input)-1; row++ {
+			parts.WriteByte(input[row][col])
+		}
+
+		concatenated := strings.Trim(parts.String(), " ")
+
+		if current == -1 {
+			current = util.ParseInt(concatenated)
+			continue
+		}
+
+		if concatenated == "" {
+			sum += current
+			current = -1
+			currentOperatorIndex--
+			continue
+		}
+
+		if operators[currentOperatorIndex] == "+" {
+			current += util.ParseInt(concatenated)
+		} else {
+			current *= util.ParseInt(concatenated)
+		}
+	}
+
+	sum += current
+
+	return strconv.Itoa(sum)
 }
