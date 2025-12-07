@@ -37,6 +37,46 @@ func Part01(input []string) string {
 	return strconv.Itoa(splits)
 }
 
+type cacheKey struct {
+	beamPosition int
+	rowIndex     int
+}
+
+func getTimelines(beamPosition int, rowIndex int, input []string, cache map[cacheKey]int) int {
+	key := cacheKey{beamPosition, rowIndex}
+	if val, ok := cache[key]; ok {
+		return val
+	}
+
+	for i := rowIndex + 1; i < len(input); i++ {
+		line := input[i]
+		if strings.Trim(line, ".") == "" {
+			continue
+		}
+
+		if line[beamPosition] != '^' {
+			continue
+		}
+
+		result := getTimelines(beamPosition-1, i, input, cache) + getTimelines(beamPosition+1, i, input, cache)
+		cache[key] = result
+		return result
+	}
+
+	cache[key] = 1
+	return 1
+}
+
 func Part02(input []string) string {
-	return strconv.Itoa(0)
+	beamPosition := 0
+
+	for i, element := range input[0] {
+		if element == 'S' {
+			beamPosition = i
+			break
+		}
+	}
+
+	cache := make(map[cacheKey]int)
+	return strconv.Itoa(getTimelines(beamPosition, 0, input, cache))
 }
