@@ -2,6 +2,7 @@ package day07
 
 import (
 	"strconv"
+	"strings"
 )
 
 func Part01(input []string) string {
@@ -12,10 +13,15 @@ func Part01(input []string) string {
 	for i, element := range input[0] {
 		if element == 'S' {
 			positionToBeam[i] = true
+			break
 		}
 	}
 
 	for _, line := range input[1:] {
+		if strings.Trim(line, ".") == "" {
+			continue
+		}
+
 		for i := 0; i < width; i++ {
 			if _, ok := positionToBeam[i]; ok {
 				if line[i] == '^' {
