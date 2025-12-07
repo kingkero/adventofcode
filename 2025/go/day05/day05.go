@@ -2,7 +2,6 @@ package day05
 
 import (
 	"cmp"
-	"fmt"
 	"slices"
 	"strconv"
 	"strings"
@@ -88,7 +87,6 @@ OUTER:
 		for i, final := range finalRanges {
 			if final.inRange(current.start) {
 				if final.inRange(current.end) {
-					fmt.Println("completely inside")
 					continue OUTER
 				}
 
