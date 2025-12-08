@@ -12,3 +12,7 @@ run: ## run solvers for all days
 .PHONY: test
 test: ## run all tests (cached)
 	go test ./...
+
+.PHONY: benchmark
+benchmark: ## run all benchmarks
+	go test -bench=. ./...
