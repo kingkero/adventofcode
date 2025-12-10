@@ -43,11 +43,6 @@ type cacheKey struct {
 func Part01(input []string) string {
 	points := make([]point, len(input))
 
-	// a single circuit contains the index of its points
-	// circuits := make([][]int, 0)
-
-	// distanceCache := make(map[cacheKey]int)
-
 	distances := make([]int, 0)
 	distanceToPoints := make(map[int][2]int)
 
@@ -122,6 +117,76 @@ OUTER:
 	return strconv.Itoa(sizes[0] * sizes[1] * sizes[2])
 }
 
+type connection struct {
+	distance int
+	a, b     int
+}
+
 func Part02(input []string) string {
-	return strconv.Itoa(0)
+	points := make([]point, len(input))
+
+	connections := make([]connection, 0)
+
+	for i, line := range input {
+		coordinates := util.Map(strings.Split(line, ","), util.ParseInt)
+		points[i] = point{coordinates[0], coordinates[1], coordinates[2]}
+
+		for j := 0; j < i; j++ {
+			distance := points[j].distanceTo(points[i])
+			connections = append(connections, connection{distance, j, i})
+		}
+	}
+
+	slices.SortFunc(connections, func(a, b connection) int {
+		return a.distance - b.distance
+	})
+
+	circuits := make([]circuit, 0, len(points))
+
+OUTER:
+	for _, conn := range connections {
+		inCircuitIds := make([]int, 0)
+
+		for i, circuit := range circuits {
+			if circuit.contains(conn.a) && circuit.contains(conn.b) {
+				continue OUTER
+			}
+
+			if circuit.contains(conn.a) {
+				inCircuitIds = append(inCircuitIds, i)
+			} else if circuit.contains(conn.b) {
+				inCircuitIds = append(inCircuitIds, i)
+			}
+		}
+
+		if len(inCircuitIds) == 0 {
+			circuits = append(circuits, circuit{
+				pointIndices: map[int]bool{
+					conn.a: true,
+					conn.b: true,
+				},
+			})
+		} else if len(inCircuitIds) == 1 {
+			circuits[inCircuitIds[0]].pointIndices[conn.a] = true
+			circuits[inCircuitIds[0]].pointIndices[conn.b] = true
+
+			if len(circuits) == 1 && len(circuits[0].pointIndices) == len(points) {
+				return strconv.Itoa(points[conn.a].x * points[conn.b].x)
+			}
+		} else {
+			circuits[inCircuitIds[0]].pointIndices[conn.a] = true
+			circuits[inCircuitIds[0]].pointIndices[conn.b] = true
+
+			for pointIndex := range circuits[inCircuitIds[1]].pointIndices {
+				circuits[inCircuitIds[0]].pointIndices[pointIndex] = true
+			}
+			circuits = slices.Delete(circuits, inCircuitIds[1], inCircuitIds[1]+1)
+
+			if len(circuits) == 1 && len(circuits[0].pointIndices) == len(points) {
+				return strconv.Itoa(points[conn.a].x * points[conn.b].x)
+			}
+		}
+	}
+
+	return "no solution found"
 }
