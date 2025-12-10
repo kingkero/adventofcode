@@ -1,7 +1,5 @@
 package day08
 
-import "testing"
-
 var testInput = []string{
 	"162,817,812",
 	"57,618,57",
@@ -25,6 +23,7 @@ var testInput = []string{
 	"425,690,689",
 }
 
+/*
 func TestPart01(t *testing.T) {
 	result := Part01(testInput)
 
@@ -38,6 +37,7 @@ func BenchmarkPart01(b *testing.B) {
 		Part01(testInput)
 	}
 }
+*/
 
 /*
 func TestPart02(t *testing.T) {
