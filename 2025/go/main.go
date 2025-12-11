@@ -9,16 +9,6 @@ import (
 
 	"github.com/echojc/aocutil"
 
-	"github.com/kingkero/adventofcode/2025/go/day01"
-	"github.com/kingkero/adventofcode/2025/go/day02"
-	"github.com/kingkero/adventofcode/2025/go/day03"
-	"github.com/kingkero/adventofcode/2025/go/day04"
-	"github.com/kingkero/adventofcode/2025/go/day05"
-	"github.com/kingkero/adventofcode/2025/go/day06"
-	"github.com/kingkero/adventofcode/2025/go/day07"
-	"github.com/kingkero/adventofcode/2025/go/day08"
-	"github.com/kingkero/adventofcode/2025/go/day09"
-	"github.com/kingkero/adventofcode/2025/go/day10"
 	"github.com/kingkero/adventofcode/2025/go/day11"
 )
 
@@ -35,21 +25,25 @@ func main() {
 
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 4, ' ', 0)
 
-	for key, day := range []Day{
-		{day01.Part01, day01.Part02},
-		{day02.Part01, day02.Part02},
-		{day03.Part01, day03.Part02},
-		{day04.Part01, day04.Part02},
-		{day05.Part01, day05.Part02},
-		{day06.Part01, day06.Part02},
-		{day07.Part01, day07.Part02},
-		{day08.Part01, day08.Part02},
-		{day09.Part01, day09.Part02},
-		{day10.Part01, day10.Part02},
-		{day11.Part01, day11.Part02},
-	} {
-		solveDay(i, writer, key+1, day.Part01, day.Part02)
-	}
+	/*
+		for key, day := range []Day{
+				{day01.Part01, day01.Part02},
+				{day02.Part01, day02.Part02},
+				{day03.Part01, day03.Part02},
+				{day04.Part01, day04.Part02},
+				{day05.Part01, day05.Part02},
+				{day06.Part01, day06.Part02},
+				{day07.Part01, day07.Part02},
+				{day08.Part01, day08.Part02},
+				{day09.Part01, day09.Part02},
+				{day10.Part01, day10.Part02},
+			{day11.Part01, day11.Part02},
+		} {
+			solveDay(i, writer, key+1, day.Part01, day.Part02)
+		}
+	*/
+
+	solveDay(i, writer, 11, day11.Part01, day11.Part02)
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)

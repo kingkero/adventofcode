@@ -15,6 +15,22 @@ var testInput = []string{
 	"iii: out",
 }
 
+var testInput2 = []string{
+	"svr: aaa bbb",
+	"aaa: fft",
+	"fft: ccc",
+	"bbb: tty",
+	"tty: ccc",
+	"ccc: ddd eee",
+	"ddd: hub",
+	"hub: fff",
+	"eee: dac",
+	"dac: fff",
+	"fff: ggg hhh",
+	"ggg: out",
+	"hhh: out",
+}
+
 func TestPart01(t *testing.T) {
 	result := Part01(testInput)
 
@@ -29,18 +45,16 @@ func BenchmarkPart01(b *testing.B) {
 	}
 }
 
-/*
 func TestPart02(t *testing.T) {
-	result := Part02(testInput)
+	result := Part02(testInput2)
 
-	if result != "40" {
-		t.Errorf("got %s, want 40", result)
+	if result != "2" {
+		t.Errorf("got %s, want 2", result)
 	}
 }
 
 func BenchmarkPart02(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Part02(testInput)
+		Part02(testInput2)
 	}
 }
-*/
