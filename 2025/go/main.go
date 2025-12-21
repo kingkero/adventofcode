@@ -9,7 +9,7 @@ import (
 
 	"github.com/echojc/aocutil"
 
-	"github.com/kingkero/adventofcode/2025/go/day11"
+	"github.com/kingkero/adventofcode/2025/go/day12"
 )
 
 type Day struct {
@@ -43,7 +43,7 @@ func main() {
 		}
 	*/
 
-	solveDay(i, writer, 11, day11.Part01, day11.Part02)
+	solveDay(i, writer, 12, day12.Part01, day12.Part02)
 
 	if err = writer.Flush(); err != nil {
 		log.Fatal(err)
