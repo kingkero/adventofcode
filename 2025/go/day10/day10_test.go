@@ -22,12 +22,11 @@ func BenchmarkPart01(b *testing.B) {
 	}
 }
 
-/*
 func TestPart02(t *testing.T) {
 	result := Part02(testInput)
 
-	if result != "40" {
-		t.Errorf("got %s, want 40", result)
+	if result != "33" {
+		t.Errorf("got %s, want 33", result)
 	}
 }
 
@@ -36,4 +35,3 @@ func BenchmarkPart02(b *testing.B) {
 		Part02(testInput)
 	}
 }
-*/
